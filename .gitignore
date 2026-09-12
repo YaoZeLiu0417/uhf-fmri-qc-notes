@@ -1,0 +1,7 @@
+# raw physiological / imaging data never enter the public repo
+data/
+../data-physio/
+results/**/*.tsv
+__pycache__/
+*.pyc
+.pytest_cache/

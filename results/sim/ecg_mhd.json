@@ -1,0 +1,15 @@
+{
+  "mode": "sim",
+  "mhd_amp": 0.9,
+  "vs_true_beats": {
+    "n_ref": 129,
+    "n_det": 130,
+    "sensitivity": 0.9922480620155039,
+    "ppv": 0.9846153846153847,
+    "latency_ms_median": 9.000000000000341,
+    "latency_ms_p95": 10.000000000005116,
+    "jitter_ms_sd": 0.7053350683143988,
+    "jitter_ms_iqr": 0.999999999990564,
+    "outliers_pct_beyond_100ms": 0.0
+  }
+}

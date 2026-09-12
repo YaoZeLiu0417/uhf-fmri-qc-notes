@@ -1,0 +1,43 @@
+{
+  "puls": {
+    "file": "S01_pre.puls",
+    "kind": "puls",
+    "fs": 400.0,
+    "duration_min": 71.7,
+    "footer_present": true,
+    "footer_duration_s": 4301.812,
+    "flatline": false,
+    "clipped_pct": 4.5,
+    "longest_constant_run_s": 0.268,
+    "scanner_triggers": 4772,
+    "beats_detected": 4891,
+    "hr_bpm_median": 68.6,
+    "hr_bpm_p5_p95": [
+      57.4,
+      84.1
+    ],
+    "ibi_outliers_pct": 0.06,
+    "scanner_missed_beats_pct": 2.4,
+    "verdict": "WARN: PPG clipping \u2014 lower gain / reposition finger clip"
+  },
+  "resp": {
+    "file": "S01_pre.resp",
+    "kind": "resp",
+    "fs": 400.0,
+    "duration_min": 38.49,
+    "footer_present": false,
+    "flatline": false,
+    "clipped_pct": 4.31,
+    "longest_constant_run_s": 4.845,
+    "scanner_triggers": 448,
+    "breaths_detected": 603,
+    "rr_per_min_median": 17.8,
+    "rr_per_min_p5_p95": [
+      10.3,
+      21.3
+    ],
+    "cushion_gain_changes": 158,
+    "verdict": "WARN: no footer \u2014 log not stopped cleanly, MDH alignment impossible; bellows clipping"
+  },
+  "alignment": null
+}

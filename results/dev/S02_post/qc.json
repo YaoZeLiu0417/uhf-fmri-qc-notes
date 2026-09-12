@@ -1,0 +1,50 @@
+{
+  "puls": {
+    "file": "S02_post.puls",
+    "kind": "puls",
+    "fs": 400.0,
+    "duration_min": 76.11,
+    "footer_present": true,
+    "footer_duration_s": 4566.445,
+    "flatline": false,
+    "clipped_pct": 0.39,
+    "longest_constant_run_s": 17.455,
+    "scanner_triggers": 6962,
+    "beats_detected": 6993,
+    "hr_bpm_median": 92.3,
+    "hr_bpm_p5_p95": [
+      81.6,
+      107.1
+    ],
+    "ibi_outliers_pct": 0.06,
+    "scanner_missed_beats_pct": 0.4,
+    "verdict": "WARN: dropout 17.5 s"
+  },
+  "resp": {
+    "file": "S02_post.resp",
+    "kind": "resp",
+    "fs": 400.0,
+    "duration_min": 76.27,
+    "footer_present": true,
+    "flatline": false,
+    "clipped_pct": 2.9,
+    "longest_constant_run_s": 2.5,
+    "scanner_triggers": 1089,
+    "breaths_detected": 1218,
+    "rr_per_min_median": 16.4,
+    "rr_per_min_p5_p95": [
+      11.9,
+      24.1
+    ],
+    "cushion_gain_changes": 369,
+    "verdict": "WARN: bellows clipping"
+  },
+  "alignment": {
+    "resp_start_minus_puls_start_s": -14.358,
+    "puls_MDH_start": "10:10:40.775",
+    "puls_MDH_stop": "11:26:47.220",
+    "resp_MDH_start": "10:10:26.417",
+    "resp_MDH_stop": "11:26:42.755",
+    "note": "DICOM AcquisitionTime uses the same wall clock; shift resp by the offset to put it on the puls clock"
+  }
+}

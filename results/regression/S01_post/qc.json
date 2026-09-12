@@ -1,0 +1,35 @@
+{
+  "puls": {
+    "file": "S01_post.puls",
+    "kind": "puls",
+    "fs": 400.0,
+    "duration_min": 0.16,
+    "footer_present": true,
+    "footer_duration_s": 9.533,
+    "flatline": true,
+    "clipped_pct": 0.0,
+    "longest_constant_run_s": 9.533,
+    "scanner_triggers": 0,
+    "verdict": "FAIL: flat line \u2014 sensor not connected"
+  },
+  "resp": {
+    "file": "S01_post.resp",
+    "kind": "resp",
+    "fs": 400.0,
+    "duration_min": 30.77,
+    "footer_present": false,
+    "flatline": false,
+    "clipped_pct": 3.64,
+    "longest_constant_run_s": 6.207,
+    "scanner_triggers": 387,
+    "breaths_detected": 472,
+    "rr_per_min_median": 17.1,
+    "rr_per_min_p5_p95": [
+      10.4,
+      21.3
+    ],
+    "cushion_gain_changes": 79,
+    "verdict": "WARN: no footer \u2014 log not stopped cleanly, MDH alignment impossible; bellows clipping"
+  },
+  "alignment": null
+}

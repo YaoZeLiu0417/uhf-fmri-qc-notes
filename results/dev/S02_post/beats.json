@@ -1,0 +1,41 @@
+{
+  "file": "S02_post.puls",
+  "mode": "real",
+  "fs": 400.0,
+  "duration_min": 76.11,
+  "clipped_samples": 7035,
+  "clipped_pct": 0.39,
+  "vs_offline_detector": {
+    "n_ref": 6992,
+    "n_det": 7012,
+    "sensitivity": 0.9987128146453089,
+    "ppv": 0.9958642327438677,
+    "latency_ms_median": -72.50000000021828,
+    "latency_ms_p95": -59.99999999994543,
+    "jitter_ms_sd": 116.51578727188743,
+    "jitter_ms_iqr": 7.499999999708962,
+    "outliers_pct_beyond_100ms": 4.582557639982816
+  },
+  "vs_scanner_triggers": {
+    "n_ref": 6962,
+    "n_det": 7012,
+    "sensitivity": 0.9985636311404769,
+    "ppv": 0.9914432401597262,
+    "latency_ms_median": -122.49999999994543,
+    "latency_ms_p95": -115.00000000069122,
+    "jitter_ms_sd": 20.389501245613836,
+    "jitter_ms_iqr": 7.499999999708962,
+    "outliers_pct_beyond_100ms": 0.215765247410817
+  },
+  "scanner_triggers_vs_offline": {
+    "n_ref": 6992,
+    "n_det": 6962,
+    "sensitivity": 0.9931350114416476,
+    "ppv": 0.9974145360528583,
+    "latency_ms_median": 49.99999999984084,
+    "latency_ms_p95": 52.500000000009095,
+    "jitter_ms_sd": 22.103836637098947,
+    "jitter_ms_iqr": 2.5000000000545697,
+    "outliers_pct_beyond_100ms": 0.36002304147465436
+  }
+}
