@@ -1,74 +1,101 @@
 # uhf-fmri-qc-notes
 
-Small, tested tools for the physiological side of (ultra-high-field) fMRI: parse scanner physiology logs, detect heartbeats
-causally the way a closed-loop paradigm would, run operator-level QC, and produce RETROICOR/RVT nuisance regressors
-aligned to the scanner clock. Written while preparing for layer-fMRI work on interoception and cognitive control.
+Small research tools for the physiological side of fMRI: parse Siemens scanner physiology logs, inspect recording quality, estimate cardiac/respiratory phase and respiratory volume per time (RVT), and evaluate pulse-oximetry beat detection offline. The project grew out of practical MRI acquisition work and an interest in reliable brain-body measurements.
 
-Validated on three clinical fMRI sessions from two participants acquired at 3 T (Siemens) at Tsinghua (209 min of pulse
-oximetry, 17,383 scanner pulse triggers). The physiology side is field-strength independent; the 3 T sessions are the
-baseline against which 5 T (United Imaging) and 9.4 T recordings will be compared. Raw logs are not part of this repository.
+**Current evidence:** initial offline evaluation used three usable pulse-oximetry recordings from **two participants acquired at 3 T**, totalling approximately **209 minutes** (17,383 scanner pulse markers). These are repeated recordings, not three independent participants. Scanner pulse markers are a comparison reference, **not independent ECG ground truth**. The results do not establish clinical validity, real-time closed-loop performance, or generalisation to 5 T/9.4 T acquisitions. Raw participant logs are not included in this repository.
+
+The `uhf` name reflects a research interest and possible future applications, not the field strength of the evaluated data.
+
+## Implemented components
+
+- Siemens PMU `.puls`/`.resp` parsing, including LOGVERSION 1/3, marker extraction and footer/MDH metadata.
+- Recording-level QC for flat lines, clipping, long constant segments, recording-rate plausibility and missing metadata; scanner-clock alignment helpers where the required footer timestamps exist.
+- Cardiac/respiratory phase and RVT estimation for physiological-noise modelling. The current CLI exports recording-level phase/RVT time series on a 1 Hz grid; it does **not** construct a complete RETROICOR design matrix sampled at fMRI volume/slice acquisition times. Acquisition-specific alignment, appropriate phase sampling and harmonic construction still require implementation and validation before downstream use.
+- Offline comparison of a slope-based PPG detector with scanner pulse markers and an alternative offline detector, with reference-relative detection and timing summaries.
+- Synthetic tests and fixed real-data regression cases for selected QC outputs and detector behaviour. These software checks are not independent physiological or clinical validation.
 
 ## Layout
 
-```
-physio/            library
-  siemens_pmu.py   Siemens PMU .puls/.resp parser (LOGVERSION 1 and 3), footer/MDH clock, trigger markers
-  beats.py         causal beat detector, offline reference detector, sensitivity/PPV/latency/jitter scorer
-  qc.py            flat-line / clipping / dropout / footer / rate checks; RETROICOR phases; RVT; puls–resp alignment
-  plots.py         figures
+```text
+physio/
+  siemens_pmu.py        PMU parser, footer/MDH metadata, pulse markers
+  beats.py              PPG detection and event-matching summaries
+  qc.py                 signal QC, phase/RVT estimation, log-clock offsets
+  plots.py              QC and timing figures
 imaging/
-  qc_tsnr_motion.py  tSNR map, framewise displacement and DVARS for an EPI run (nibabel)
+  qc_tsnr_motion.py     tSNR, framewise displacement and DVARS helpers
 scripts/
-  run_physio_qc.py   QC + regressors for one or all sessions listed in sessions.json
-  run_beat_eval.py   causal detector vs scanner triggers, per session, with summary
-  sim_ecg_mhd.py     why amplitude ECG triggering fails in the magnet (simulated MHD-elevated T wave)
-tests/               pytest: synthetic tests always run; real-data tests run when the logs are present
-sessions.json        manifest: which recordings are development data and which are fixed regression cases
-results/             JSON metrics and PNG figures per session (regressors .tsv are ignored by git)
+  run_physio_qc.py      QC reports and recording-level phase/RVT export
+  run_beat_eval.py      offline detector comparisons
+  sim_ecg_mhd.py        illustrative synthetic ECG/MHD simulation
+sessions.json           development recordings and fixed regression cases
+results/                stored JSON summaries and figures
+tests/                  synthetic tests and conditional real-data tests
 ```
 
-## Development vs regression data
+The simulation is illustrative; it is not an evaluation on acquired ECG data. Imaging helpers are separate from the physiological-recording evaluation summarised below.
 
-| Role | Sessions | Why |
+## Evaluation data and software regression cases
+
+| Role | Recordings | Purpose and limitations |
 |---|---|---|
-| dev | S02 pre, S02 post | complete logs with footers (alignable to DICOM time), <0.5 % PPG clipping, two sessions of one participant for repeatability |
-| regression | S01 pre, S01 post | known acquisition faults the QC must keep flagging: 4.5 % PPG clipping, flat-line pulse sensor, respiration logs not stopped cleanly |
+| Development | S02 pre, S02 post | Two visits from one participant. PPG clipping is below 0.5%; S02 post has a recorded 17.5 s dropout. Both respiratory recordings retain QC warnings. |
+| Fixed regression cases | S01 pre, S01 post | Known problematic recordings used to check that QC flags remain detectable. S01 pre has 4.5% PPG clipping; S01 post is flat-line PPG and is excluded from beat evaluation. Their respiratory logs lack footer metadata. |
 
-`tests/test_regression.py` asserts each session keeps its verdict class (OK / WARN / FAIL) and that the dev sessions keep
-sensitivity ≥ 0.99, PPV ≥ 0.98, jitter IQR ≤ 20 ms against the scanner's own triggers.
+The manifest covers four visits, but only three PPG recordings enter the beat-evaluation summary. The development and regression labels describe software-development roles, not independent training/test cohorts or an external validation design. Repeated visits do not increase the number of independent participants.
 
-## Results on the three usable pulse recordings
+`tests/test_regression.py` checks expected QC verdict classes and, for the development recordings, sensitivity >= 0.99, PPV >= 0.98 and timing IQR <= 20 ms relative to scanner markers. These are regression assertions on known recordings, not general performance guarantees.
 
-| Session | Sensitivity | PPV | Median lead vs scanner trigger | Jitter (IQR) | Outliers > 100 ms |
-|---|---|---|---|---|---|
-| S02 pre (dev) | 0.998 | 0.990 | 115 ms | 10.0 ms | 4.7 % |
-| S02 post (dev) | 0.999 | 0.991 | 122 ms | 7.5 ms | 0.2 % |
-| S01 pre (regression) | 1.000 | 0.974 | 140 ms | 12.5 ms | 0.1 % |
+## Stored offline results
 
-The causal detector fires on the PPG upslope, i.e. before the scanner's own trigger; the scanner trigger itself misses
-0.4–2.6 % of beats found offline. Jitter is reported as IQR because a few mis-pairings at ~93 bpm inflate the SD
-(129 ms on S02 pre) while the IQR stays at 10 ms.
+The table reproduces rounded values from [`results/beat_eval_summary.json`](results/beat_eval_summary.json). It is not a new analysis or an independently reproduced benchmark.
+
+| Recording | Sensitivity vs markers | PPV vs markers | Median detection-minus-marker offset (ms) | Timing IQR (ms) | Timing SD (ms) | Deviations > 100 ms from median (%) |
+|---|---|---|---|---|---|---|
+| S02 pre (development) | 0.998 | 0.990 | -115.0 | 10.0 | 128.9 | 4.7 |
+| S02 post (development) | 0.999 | 0.991 | -122.5 | 7.5 | 20.4 | 0.2 |
+| S01 pre (regression) | 1.000 | 0.974 | -140.0 | 12.5 | 15.3 | 0.1 |
+
+**Interpretation limits:**
+
+- The metrics quantify agreement with scanner pulse markers under the repository's matching rule, not sensitivity/specificity against true ECG events. Rounded `1.000` does not imply perfect detection. Differences between scanner markers and the alternative offline detector do not by themselves identify which events are physiologically correct.
+- The default scorer uses greedy one-to-one matching from 0.3 s before to 0.6 s after each reference marker. Detection and timing summaries depend on this relatively broad window; they should not be treated as precise event-timing validation. IQR, SD and the outlier fraction are shown together rather than relying on IQR alone.
+- Negative offsets indicate detections earlier than the matched scanner marker. They are not end-to-end system latency, verified ECG R-peak timing, or demonstrated closed-loop timing accuracy.
+- Although the code retains the function name `causal_detect`, the evaluated path calls it with `clip_pct=99.5`, calculated from the **whole recording**. The current evaluation is therefore offline, not evidence of a strictly causal streaming pipeline. Online operation would need past-data-only processing and separate acquisition-to-output timing tests.
+- Phase/RVT outputs and clock-alignment helpers have not been independently validated here as a complete physiological-noise correction pipeline. Do not use the 1 Hz phase export as a drop-in fMRI RETROICOR design matrix.
 
 ## Usage
 
+Run from the repository root:
+
 ```bash
-python scripts/run_physio_qc.py                # all sessions; writes results/<role>/<session>/qc.{json,png,_regressors_1Hz.tsv}
-python scripts/run_beat_eval.py S02_pre    # one session
-python scripts/run_physio_qc.py --puls X.puls --resp Y.resp --out results/adhoc/name
-python scripts/sim_ecg_mhd.py --mhd 0.9
+python -m pip install -r requirements.txt
+python -m pytest tests -q
+
+# With authorised raw logs arranged as in sessions.json:
+python scripts/run_physio_qc.py --data-root /path/to/logs
+PHYSIO_DATA_ROOT=/path/to/logs python scripts/run_beat_eval.py S02_pre
 PHYSIO_DATA_ROOT=/path/to/logs python -m pytest tests -q
+
+# An individual recording pair:
+python scripts/run_physio_qc.py --puls X.puls --resp Y.resp --out results/adhoc/qc
+
+# Synthetic illustration only:
+python scripts/sim_ecg_mhd.py --mhd 0.9
 ```
 
-Requirements: `pip install -r requirements.txt` (numpy, scipy, matplotlib; nibabel for `imaging/`, pydicom for `scripts/dicom_run_times.py`, pytest for tests). MIT license.
+Raw-data-dependent tests are skipped when the required PMU logs are unavailable. A successful synthetic-test run does not reproduce the participant-level results. QC export includes JSON/PNG reports and a `*_regressors_1Hz.tsv` file containing `t_s`, `cardiac_phase`, `resp_phase` and `rvt`; the historical filename does not imply a complete fMRI-ready regressor set. Check metadata, missing values and acquisition timing before any use.
 
-## Why pulse oximetry and not ECG
+## Possible next steps
 
-In the magnet, blood flow in the aorta induces a magnetohydrodynamic (MHD) voltage that elevates the T wave and grows
-with field strength; at 7 T it substantially degrades ECG-based triggering (Krug et al., [PMC6024401](https://pmc.ncbi.nlm.nih.gov/articles/PMC6024401/)).
-Pulse oximetry, acoustic triggering ([Frauenrath et al. 2010](https://jcmr-online.biomedcentral.com/articles/10.1186/1532-429X-12-67))
-and electrode-free pilot-tone/beat-sensor methods are the ultra-high-field alternatives. The pulse signal lags the R wave
-by the pulse arrival time (~200–300 ms at the finger, [PMC6912522](https://pmc.ncbi.nlm.nih.gov/articles/PMC6912522/)),
-so any interoception paradigm timed to PPG must model that delay explicitly.
+With suitable authorised data and supervision, future work could evaluate more participants, independent event references, acquisition-specific physiological modelling and prospective streaming operation. Testing at 5 T or 9.4 T would require appropriate recordings and separate validation; neither dataset availability nor comparable performance is assumed.
 
-References: Glover, Li & Ress (2000) RETROICOR, Magn Reson Med 44:162; Birn et al. (2006) RVT, NeuroImage 31:1536;
-Kasper et al. (2017) PhysIO toolbox, [github.com/ComputationalPsychiatry/PhysIO](https://github.com/ComputationalPsychiatry/PhysIO).
+## Methodological background
+
+The project applies existing signal-processing ideas; it does not claim to introduce RETROICOR or RVT. Background references retained for further reading:
+
+- Glover, Li & Ress (2000), RETROICOR, *Magnetic Resonance in Medicine* 44:162.
+- Birn et al. (2006), respiratory variation and fMRI, *NeuroImage* 31:1536.
+- Kasper et al. (2017), the [PhysIO toolbox](https://github.com/ComputationalPsychiatry/PhysIO).
+
+Research/development software. See [LICENSE](LICENSE) for the MIT licence.
