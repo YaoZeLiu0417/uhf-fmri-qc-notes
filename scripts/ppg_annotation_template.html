@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PPG 原始波形标注</title><style>
+*{box-sizing:border-box}body{margin:0;background:#f3f6f8;color:#19364d;font:15px/1.65 "Microsoft YaHei",Arial,sans-serif}main{max-width:1240px;margin:22px auto;padding:0 22px 35px}header{border-top:4px solid #3278a8;padding:15px 0}h1{font-size:25px;margin:3px 0}p{margin:7px 0}.small{font-size:13px;color:#566e80}.panel{background:#fff;border:1px solid #dae3eb;border-radius:7px;padding:18px;margin:14px 0}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}label{display:flex;flex-direction:column;gap:4px}input,select,textarea,button{font:inherit}input,select,textarea{width:100%;padding:7px 9px;border:1px solid #afc1cf;border-radius:4px;color:#19364d;background:#fff}button{padding:7px 12px;border:1px solid #9cb5c6;border-radius:4px;background:#fff;color:#19364d;cursor:pointer}button.primary{background:#245f89;color:#fff;border-color:#245f89}button[aria-pressed="true"]{background:#dbeaf5;border-color:#3278a8}button:disabled{opacity:.5;cursor:default}.grow{flex:1;min-width:130px}#plot{display:block;width:100%;height:390px;touch-action:none;border:1px solid #d9e3eb;margin:12px 0}#message{min-height:26px;color:#aa362e;overflow-wrap:anywhere}.notice{background:#fff6e3;border-left:4px solid #bb842e;padding:10px 14px}#progress{font-weight:600}.chips{display:flex;gap:7px;flex-wrap:wrap;margin:7px 0}.chips button{font-size:13px;padding:4px 7px}.toolbar select{width:auto}input[type=range]{padding:0;border:0}.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}summary{cursor:pointer;font-weight:600}code{overflow-wrap:anywhere}#backup{max-width:440px}textarea{resize:vertical}.locked{color:#5b7180}.span-two{grid-column:span 2}@media(max-width:700px){main{padding:0 12px}.grid,.two{grid-template-columns:1fr}.span-two{grid-column:auto}#plot{height:320px}button,input,select,textarea{min-height:40px;font-size:16px}h1{font-size:22px}.panel{padding:12px}}
+</style></head><body><main>
+<header><h1>PPG 原始波形标注</h1><p>仅显示原始样本。先明确事件定义，再标注确定事件与不确定区间。</p><p class="small">这批窗口由先前的分歧筛查选出；标注结果用于波形事件复核，不能直接当作 ECG 或精确硬件时序验证。</p></header>
+<section class="panel"><div class="grid">
+<label>复核者姓名或代号<input id="reviewer" autocomplete="off"></label>
+<label>复核日期<input id="reviewDate" type="date"></label>
+<label>是否已看过算法结果<select id="exposure"><option value="unknown">不确定</option><option value="no">没有看过</option><option value="yes">已经看过</option></select></label>
+<label>本窗标注的特征点<select id="fiducial"><option value="">请选择</option><option value="ppg_peak">PPG 波形峰顶</option><option value="max_upstroke">最大上升沿位置</option><option value="other">其他明确特征点</option></select></label>
+<label class="span-two" id="definitionLabel">具体定义<input id="definition" placeholder="写明选取规则；有歧义时标不确定区间"></label>
+</div><p id="profileHint" class="small">每窗的复核信息与事件一起保存；开始标注后，本窗信息锁定，防止混用定义。</p></section>
+<section class="panel"><div class="row toolbar">
+<button id="previous">上一窗</button><label class="grow">案例<select id="caseSelect"></select></label><button id="next">下一窗</button>
+<span id="progress" aria-live="polite"></span></div>
+<div class="row toolbar" style="margin-top:14px"><label>显示范围<select id="span"><option value="30">30 秒</option><option value="10">10 秒</option><option value="5">5 秒</option><option value="1">1 秒</option></select></label>
+<button id="panLeft">向前移动</button><button id="panRight">向后移动</button><span id="viewLabel" class="small"></span></div>
+<label class="small">查看位置<input id="position" type="range" min="0" max="0" step="0.01" value="0"></label>
+<div class="row"><button data-mode="point" aria-pressed="true">标注事件</button><button data-mode="interval" aria-pressed="false">标不确定区间</button><button data-mode="delete" aria-pressed="false">删除事件</button><button id="undo">撤销本窗上一步</button><span id="cursor" class="small">时间单位：相对本窗起点的秒</span></div>
+<canvas id="plot" role="img" aria-label="可放大和点击标注的原始脉搏波形"></canvas>
+<p class="small">单击记录最近的原始样本点，不会吸附到算法峰值。区间模式连续点起止位置；放大到 1 秒可细看。区间列表可逐项移除。</p>
+<div id="message" role="alert"></div>
+<div class="two"><div><details><summary id="pointSummary">已标注事件：0</summary><div id="points" class="chips"></div></details><details><summary id="intervalSummary">不确定区间：0</summary><div id="intervals" class="chips"></div></details></div>
+<label>本窗备注<textarea id="note" rows="3" placeholder="记录波形歧义及不确定原因"></textarea></label></div>
+<div class="row" style="margin-top:14px"><button id="wholeUncertain">整窗无法判定</button><button id="complete" class="primary">本窗标注已记录</button><span id="caseStatus" aria-live="polite"></span></div></section>
+<section class="panel"><div class="row"><button id="export" class="primary">导出标注 JSON</button><span id="storageStatus" class="small" aria-live="polite"></span></div><p class="small">浏览器暂存不是正式备份。每次工作结束请导出文件；恢复时选择此前导出的 JSON，程序会校验数据指纹、样本索引和窗口边界。</p>
+<details><summary>恢复已有标注</summary><label>选择这个标注页导出的 JSON<input id="import" type="file" accept=".json,application/json"></label></details>
+<p class="notice">没有标注的窗口保持“未标注”，不解释为没有脉搏。没有确定事件时，应将整窗列为不确定。事件点与不确定区间冲突时，需先消除冲突才能记录完成。</p><p class="small" id="datasetInfo"></p></section>
+</main><script id="dataset" type="application/json">__DATA_JSON__</script><script>__CORE_JS__</script><script>
+'use strict';
+const C=PPGAnnotationCore,D=JSON.parse(document.getElementById('dataset').textContent),$=id=>document.getElementById(id);
+const key='ppg-annotation-v1:'+D.fingerprint;let state=C.emptySession(D),index=0,mode='point',draft=null,start=0,span=30,undo=[],storageEnabled=true;
+const today=new Date(),date=[today.getFullYear(),String(today.getMonth()+1).padStart(2,'0'),String(today.getDate()).padStart(2,'0')].join('-');
+state.profile.review_date=date;
+try{const raw=localStorage.getItem(key);if(raw)state=C.fromImport(JSON.parse(raw),D);}catch(e){storageEnabled=false;$('storageStatus').textContent='暂存无法恢复，未覆盖原暂存；请导入已有备份或及时导出新文件。';}
+const current=()=>state.cases[index],signal=()=>D.cases[index],say=t=>$('message').textContent=t;
+const statusName={unreviewed:'未标注',in_progress:'编辑中',completed:'已记录'};
+function profile(){return {reviewer:$('reviewer').value.trim(),review_date:$('reviewDate').value,fiducial:$('fiducial').value,definition:$('definition').value.trim(),prior_exposure:$('exposure').value};}
+function save(){if(!storageEnabled)return;try{localStorage.setItem(key,JSON.stringify(C.toExport(state,D)));$('storageStatus').textContent='已暂存于当前浏览器；请定期导出。';}catch(e){$('storageStatus').textContent='暂存未成功：'+e.message+' 请导出文件。';}}
+function push(){undo.push(C.clone(current()));if(undo.length>40)undo.shift();}
+function begin(){const p=current().metadata || profile();C.validateMetadata(p);current().metadata=C.clone(p);current().status='in_progress';state.profile=C.clone(p);}
+function changed(){save();refresh(false);}
+function invoke(fn){try{say('');fn();}catch(e){say(e.message);}}
+function setProfile(p){$('reviewer').value=p.reviewer||'';$('reviewDate').value=p.review_date||date;$('fiducial').value=p.fiducial||'';$('definition').value=p.definition||'';$('exposure').value=p.prior_exposure||'unknown';}
+function refresh(navigation){
+ const r=current(),c=signal();if(navigation){undo=[];draft=null;start=0;span=30;$('span').value='30';setProfile(r.metadata||state.profile);}
+ const locked=r.metadata!==null;for(const id of ['reviewer','reviewDate','fiducial','definition','exposure'])$(id).disabled=locked;
+ $('profileHint').textContent=locked?'本窗复核信息已锁定；事件定义与标注一起保存。':'请先填写复核信息和事件定义。';
+ $('caseSelect').innerHTML=D.cases.map((c,i)=>`<option value="${i}">${c.case_id} · ${statusName[state.cases[i].status]}</option>`).join('');$('caseSelect').value=String(index);
+ $('progress').textContent=`已记录 ${state.cases.filter(r=>r.status==='completed').length} / ${D.cases.length} 窗`;
+ $('caseStatus').textContent=statusName[r.status];$('note').value=r.note;
+ $('pointSummary').textContent=`已标注事件：${r.sample_indices.length}`;$('intervalSummary').textContent=`不确定区间：${r.uncertain_intervals_s.length}`;
+ $('points').replaceChildren();for(const n of r.sample_indices){const b=document.createElement('button');b.textContent=C.timeAt(c,n).toFixed(3)+' s ×';b.setAttribute('aria-label','移除 '+C.timeAt(c,n).toFixed(3)+' 秒事件');b.onclick=()=>invoke(()=>{push();begin();r.sample_indices=r.sample_indices.filter(v=>v!==n);changed();});$('points').append(b);}
+ $('intervals').replaceChildren();r.uncertain_intervals_s.forEach(([a,b],i)=>{const btn=document.createElement('button');btn.textContent=a.toFixed(3)+'–'+b.toFixed(3)+' s ×';btn.onclick=()=>invoke(()=>{push();begin();r.uncertain_intervals_s.splice(i,1);changed();});$('intervals').append(btn);});
+ $('previous').disabled=index===0;$('next').disabled=index===D.cases.length-1;$('undo').disabled=!undo.length;
+ $('position').max=String(Math.max(0,c.duration_s-span));start=Math.max(0,Math.min(start,c.duration_s-span));$('position').value=String(start);
+ $('viewLabel').textContent=start.toFixed(2)+'–'+(start+span).toFixed(2)+' s';draw();
+}
+function navigate(i){index=Math.max(0,Math.min(D.cases.length-1,i));say('');refresh(true);}
+$('previous').onclick=()=>navigate(index-1);$('next').onclick=()=>navigate(index+1);$('caseSelect').onchange=e=>navigate(Number(e.target.value));
+for(const id of ['reviewer','reviewDate','fiducial','definition','exposure'])$(id).oninput=()=>{state.profile=profile();save();};
+$('span').onchange=e=>{const center=start+span/2;span=Number(e.target.value);start=Math.max(0,Math.min(signal().duration_s-span,center-span/2));refresh(false);};
+$('position').oninput=e=>{start=Number(e.target.value);refresh(false);};$('panLeft').onclick=()=>{start=Math.max(0,start-span/2);refresh(false);};$('panRight').onclick=()=>{start=Math.min(signal().duration_s-span,start+span/2);refresh(false);};
+document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;draft=null;say('');document.querySelectorAll('[data-mode]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));draw();});
+$('undo').onclick=()=>{if(undo.length){state.cases[index]=undo.pop();draft=null;save();refresh(false);}};
+$('note').onfocus=()=>{if(current().metadata)push();};$('note').oninput=e=>invoke(()=>{if(!current().metadata && e.target.value.trim())begin();if(current().metadata){current().note=e.target.value;current().status='in_progress';save();$('caseStatus').textContent='编辑中';$('progress').textContent=`已记录 ${state.cases.filter(r=>r.status==='completed').length} / ${D.cases.length} 窗`;}});
+$('wholeUncertain').onclick=()=>invoke(()=>{C.validateMetadata(current().metadata||profile());if(current().sample_indices.length)throw Error('已有事件点，请保留清晰事件并缩小不确定范围，或先移除冲突点。');push();begin();current().uncertain_intervals_s=[[0,signal().duration_s]];changed();});
+$('complete').onclick=()=>invoke(()=>{if(draft!==null)throw Error('不确定区间尚未选完，请再点终点或切换模式取消。');C.canComplete(current(),signal());push();current().status='completed';changed();});
+function download(text,name){const blob=new Blob([text],{type:'application/json;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+$('export').onclick=()=>invoke(()=>{state.profile=profile();download(JSON.stringify(C.toExport(state,D),null,2),'PPG_annotations_'+(state.profile.review_date||date)+'.private.json');});
+$('import').onchange=async e=>{try{say('');const f=e.target.files[0];if(!f)return;const next=C.fromImport(JSON.parse(await f.text()),D);if(state.cases.some(r=>r.status!=='unreviewed') && !confirm('导入会替换当前浏览器暂存，请先确认已导出备份。继续导入？'))return;state=next;storageEnabled=true;index=0;save();refresh(true);}catch(error){say(error.message);}finally{e.target.value='';}};
+const canvas=$('plot');let box={left:58,right:20,top:22,bottom:42,width:0,height:0};
+function geometry(){const r=canvas.getBoundingClientRect();box.width=r.width;box.height=r.height;return r;}
+function xFor(t){return box.left+(t-start)/span*(box.width-box.left-box.right);}
+function yFor(v){return box.top+(4095-v)/4095*(box.height-box.top-box.bottom);}
+function draw(){const rect=geometry(),ratio=window.devicePixelRatio||1;canvas.width=Math.round(rect.width*ratio);canvas.height=Math.round(rect.height*ratio);const ctx=canvas.getContext('2d');ctx.scale(ratio,ratio);ctx.clearRect(0,0,rect.width,rect.height);ctx.font='13px Arial';
+ const c=signal(),r=current();ctx.fillStyle='#fff';ctx.fillRect(0,0,rect.width,rect.height);
+ for(const [a,b] of r.uncertain_intervals_s){const lo=Math.max(a,start),hi=Math.min(b,start+span);if(hi>lo){ctx.fillStyle='#f8e3b1';ctx.fillRect(xFor(lo),box.top,xFor(hi)-xFor(lo),rect.height-box.top-box.bottom);}}
+ ctx.strokeStyle='#dfe6ec';ctx.fillStyle='#526b7e';ctx.lineWidth=1;for(const v of [0,1024,2048,3072,4095]){const y=yFor(v);ctx.beginPath();ctx.moveTo(box.left,y);ctx.lineTo(rect.width-box.right,y);ctx.stroke();ctx.textAlign='right';ctx.fillText(String(v),box.left-8,y+4);}
+ const ticks=rect.width<600?3:6;for(let k=0;k<=ticks;k++){const t=start+span*k/ticks,x=xFor(t);ctx.beginPath();ctx.moveTo(x,box.top);ctx.lineTo(x,rect.height-box.bottom);ctx.stroke();ctx.textAlign=k===0?'left':k===ticks?'right':'center';ctx.fillText(t.toFixed(span<=1?2:1),x,rect.height-box.bottom+21);}
+ ctx.save();ctx.beginPath();ctx.rect(box.left,box.top,rect.width-box.left-box.right,rect.height-box.top-box.bottom);ctx.clip();ctx.strokeStyle='#243e50';ctx.lineWidth=1.15;ctx.beginPath();let first=true;
+ const lo=Math.max(0,Math.floor((start-c.first_sample_time_s)*c.sampling_frequency)-1),hi=Math.min(c.samples.length,Math.ceil((start+span-c.first_sample_time_s)*c.sampling_frequency)+1);
+ for(let i=lo;i<hi;i++){const x=xFor(C.timeAt(c,i)),y=yFor(c.samples[i]);if(first){ctx.moveTo(x,y);first=false;}else ctx.lineTo(x,y);}ctx.stroke();
+ for(const n of r.sample_indices){const t=C.timeAt(c,n);if(t<start || t>start+span)continue;const x=xFor(t),y=yFor(c.samples[n]);ctx.strokeStyle='#1469a0';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x,box.top);ctx.lineTo(x,rect.height-box.bottom);ctx.stroke();ctx.beginPath();ctx.arc(x,y,4,0,2*Math.PI);ctx.fillStyle='#1469a0';ctx.fill();}
+ if(draft!==null){ctx.strokeStyle='#ae7815';ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(xFor(draft),box.top);ctx.lineTo(xFor(draft),rect.height-box.bottom);ctx.stroke();ctx.setLineDash([]);}ctx.restore();ctx.fillStyle='#526b7e';ctx.textAlign='left';ctx.fillText('原始 PPG · ADC 任意单位',box.left,15);ctx.textAlign='right';ctx.fillText('相对本窗起点 / s',rect.width-box.right,rect.height-5);
+}
+function clickedTime(e){const rect=geometry(),x=e.clientX-rect.left,y=e.clientY-rect.top;if(x<box.left || x>rect.width-box.right || y<box.top || y>rect.height-box.bottom)return null;return Math.max(0,Math.min(signal().duration_s-1e-9,start+(x-box.left)/(rect.width-box.left-box.right)*span));}
+canvas.onpointermove=e=>{const t=clickedTime(e);if(t!==null){const n=C.snapIndex(signal(),t);$('cursor').textContent=C.timeAt(signal(),n).toFixed(4)+' s；ADC '+signal().samples[n];}};
+canvas.onclick=e=>invoke(()=>{const t=clickedTime(e);if(t===null)return;const c=signal(),r=current();C.validateMetadata(r.metadata||profile());
+ if(mode==='interval'){if(draft===null){draft=t;say('再点击不确定区间的终点。');draw();return;}const a=Math.min(draft,t),b=Math.max(draft,t);if(b-a<1/c.sampling_frequency)throw Error('区间过短，请选择不同起止点。');push();begin();r.uncertain_intervals_s=C.mergeRanges([...r.uncertain_intervals_s,[a,b]]);draft=null;changed();}
+ else if(mode==='delete'){const nearest=r.sample_indices.reduce((best,n)=>best===null || Math.abs(xFor(C.timeAt(c,n))-xFor(t))<Math.abs(xFor(C.timeAt(c,best))-xFor(t))?n:best,null);if(nearest===null || Math.abs(xFor(C.timeAt(c,nearest))-xFor(t))>12)throw Error('附近没有已标注事件；可放大或从时刻列表移除。');push();begin();r.sample_indices=r.sample_indices.filter(n=>n!==nearest);changed();}
+ else{push();begin();r.sample_indices=[...new Set([...r.sample_indices,C.snapIndex(c,t)])].sort((a,b)=>a-b);changed();}});
+new ResizeObserver(()=>draw()).observe(canvas);
+$('datasetInfo').textContent=`${D.cases.length} 个案例；仅原始样本，无算法检测点。数据指纹：${D.fingerprint.slice(0,16)}…`;
+refresh(true);
+</script></body></html>

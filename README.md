@@ -71,6 +71,15 @@ See the [event audit method](docs/event-audit-2026-10.md),
 include all 24 waveform overlays, AI-assisted observations, raw pages without
 algorithm markers/counts, and an empty independent-annotation template.
 
+## Independent annotation preparation
+
+Independent reference preparation is now available as a [raw-only local
+annotation page](docs/manual-annotation.md). It presents original samples,
+supports manual points and uncertainty intervals, and exports fingerprint-bound
+annotations. Algorithm markers and counts are hidden; reviewer exposure is
+recorded explicitly. All cases are initially unannotated, and this preparation
+does not turn AI observations into human or ECG ground truth.
+
 ## Whole-recording results
 
 ![Aggregate physiological measurement results](results/measurement_summary_20261025.png)
