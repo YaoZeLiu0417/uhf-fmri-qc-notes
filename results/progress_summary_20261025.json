@@ -1,0 +1,112 @@
+{
+  "as_of": "2026-10-25",
+  "scope": "Integrated MRI physiological measurement: parsing, recording QC, offline pulse-marker comparison, audited acquisition-window export and aggregate reporting.",
+  "field_strength_t": 3,
+  "archive": {
+    "participants": 6,
+    "visits": 9,
+    "original_channel_logs": 18,
+    "long_nonconstant_ppg_recordings": 8,
+    "long_nonconstant_respiratory_recordings": 9,
+    "ppg_whole_recorded_minutes": 621.1347333333333,
+    "respiratory_whole_recorded_minutes": 711.6784,
+    "duration_interpretation": "Whole-record durations include non-scan periods and low-quality segments; they are not quality-accepted MRI measurement minutes.",
+    "independent_participant_denominator": 6
+  },
+  "recording_quality": {
+    "ppg_verdict_counts": {
+      "OK": 4,
+      "WARN": 4,
+      "FAIL": 1
+    },
+    "respiratory_verdict_counts": {
+      "OK": 0,
+      "WARN": 9,
+      "FAIL": 0
+    },
+    "respiratory_rule_update": "Constant intervals longer than five seconds trigger WARN, changing one former OK verdict without changing samples or event-comparison measurements.",
+    "longest_constant_ppg_seconds": 360.832,
+    "longest_constant_respiratory_seconds": 255.6,
+    "coarse_qc_is_not_event_validation": true
+  },
+  "audited_run_export": {
+    "run_definitions": 36,
+    "channel_run_candidates": 72,
+    "cardiac_ppg_exports": 32,
+    "respiratory_exports": 36,
+    "total_exports": 68,
+    "refused_cardiac_exports": 4,
+    "independently_compared_export_pairs": 68,
+    "exactly_matching_samples": 16560242,
+    "all_decompressed_text_equal": true,
+    "core_metadata_exactly_equal": true,
+    "strict_interval_flatline_check_changes_acceptance": false,
+    "onset_source": "Externally audited onset supplied by private manifest; no automatic DICOM onset reconstruction or inferred MRI TTL.",
+    "sample_spacing_assumption": "Uniform sampling between MDH clock endpoints.",
+    "local_first_slice_vs_volume_onset_example_seconds": 1.485,
+    "sample_identity_is_not_segment_validity": true
+  },
+  "expanded_offline_ppg_evaluation": {
+    "participants": 6,
+    "recordings": 8,
+    "reference_markers": 41523,
+    "detections": 42804,
+    "windows_specified_before_expanded_evaluation": true,
+    "same_events_rescored_for_both_windows": true,
+    "historical_window": {
+      "matching_window_seconds": [
+        -0.3,
+        0.6
+      ],
+      "matched_pairs": 41247,
+      "pooled_reference_recall": 0.9933530814247525,
+      "pooled_detection_ppv": 0.9636248948696383,
+      "minimum_per_record_ppv": 0.8117267348036579,
+      "maximum_per_record_ppv": 0.995507637017071,
+      "per_record_median_offset_ms_range": [
+        -145.00724580238966,
+        -120.01261489481863
+      ]
+    },
+    "narrower_window": {
+      "matching_window_seconds": [
+        -0.15,
+        0.3
+      ],
+      "matched_pairs": 34056,
+      "pooled_reference_recall": 0.820171952893577,
+      "pooled_detection_ppv": 0.7956265769554247
+    },
+    "interpretation": "Marker agreement depends on the matching window. The narrower left boundary is near systematic marker-relative offsets; unmatched pairs are not independently established missed heartbeats.",
+    "reference_is_independent_ecg_truth": false,
+    "physiological_markers_are_mri_ttl": false,
+    "whole_record_percentile_cap_used": true,
+    "prospective_streaming_validated": false,
+    "end_to_end_latency_validated": false
+  },
+  "task_event_alignment": {
+    "status": "Pending task event logs and verified clock/trigger mapping.",
+    "eprime_timestamps_alone_prove_shared_timing": false
+  },
+  "historical_detector_benchmark": {
+    "participants": 2,
+    "ppg_recordings": 3,
+    "approximately_recorded_minutes": 209,
+    "scanner_pulse_markers": 17383,
+    "original_artifacts_preserved": true,
+    "historical_missing_footer_reports_have_source_hashes": false,
+    "historical_footer_discrepancy_cause": "Unresolved; current complete recordings contain the endpoints, and historical input equivalence is not established."
+  },
+  "next_steps": [
+    "Establish valid segment duration within audited MRI acquisition windows.",
+    "Add independent event annotation and appropriate reference measurements.",
+    "Validate prospective streaming and acquisition-to-output timing."
+  ],
+  "interoceptive_perception_validated": false,
+  "uhf_performance_validated": false,
+  "artifacts": {
+    "measurements": "measurement_summary_20261025.json",
+    "figure": "measurement_summary_20261025.png",
+    "validation": "measurement_validation_20261025.json"
+  }
+}

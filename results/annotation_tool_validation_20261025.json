@@ -1,0 +1,36 @@
+{
+  "case_count": 24,
+  "selected_seconds": 720,
+  "original_samples_in_viewer": 288028,
+  "algorithm_event_arrays_in_viewer": false,
+  "study_identifiers_in_viewer": false,
+  "initial_human_event_annotations": 0,
+  "dataset_fingerprint_checked_privately": true,
+  "browser_checks": {
+    "desktop_and_mobile_render": true,
+    "metadata_guard": true,
+    "manual_sample_snapping": true,
+    "point_add_delete_undo": true,
+    "uncertainty_intervals": true,
+    "completion_and_incomplete_states": true,
+    "reload_restores_session": true,
+    "json_export_import_roundtrip": true,
+    "wrong_fingerprint_rejected": true,
+    "unannotated_remains_unknown": true,
+    "browser_errors": [],
+    "qa_annotation_is_not_human_truth": true
+  },
+  "scope": "Annotation preparation and software checks only. No independent human or ECG truth has been created.",
+  "software_checks": {
+    "python_tests_passed": 64,
+    "python_legacy_cases_skipped_default_paths": 6,
+    "python_subtests_passed": 5,
+    "annotation_builder_tests_passed": 3,
+    "node_core_checks_passed": true
+  },
+  "implementation_sha256": {
+    "scripts/build_ppg_annotation.py": "f23e2f95a7f237c68e055ffec580961f7484037f372fd36f30aec9ef5388188e",
+    "scripts/ppg_annotation_template.html": "df695289b4bd2037b297e28c420a68eb7b6d5e51a2c0d435e46cf08c5675c904",
+    "web/ppg_annotation_core.js": "8e0c6052b39c9319e6c2c4c0b1596f55f3ef143b3e06602757b7ed0d4c681543"
+  }
+}

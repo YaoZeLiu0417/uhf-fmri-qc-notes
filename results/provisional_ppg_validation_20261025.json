@@ -1,0 +1,24 @@
+{
+  "scope": "Software/output consistency checks, not physiological ground-truth accuracy.",
+  "run_definitions_checked": 36,
+  "source_exports_rehashed_and_read": 32,
+  "missing_runs_left_unimputed": 4,
+  "event_time_sample_mappings_checked": 22492,
+  "support_and_uncertainty_membership_checked": true,
+  "window_partitions_and_prior_QC_states_preserved": true,
+  "rates_recomputed_without_bridging_discarded_events": true,
+  "known_artifact_supports_retained": true,
+  "output_aggregates_reconciled": true,
+  "source_window_manifest_unchanged": true,
+  "human_annotations_created": 0,
+  "ai_visual_screened_windows": 24,
+  "python_tests_passed": 67,
+  "python_default_legacy_path_tests_skipped": 6,
+  "python_subtests_passed": 5,
+  "implementation_sha256": {
+    "physio/provisional_ppg.py": "a9ea5e4a1f8cb651da2fb3b999d89c8fc67b7b193ea80aecc7e11f901d25a641",
+    "scripts/run_provisional_ppg.py": "d7578d9f5a067acb6ba5dfa161aee09264803f4a42f26c566854a80da9dea3df",
+    "physio/beats.py": "b15d2ed11a23417783065f43c6e53fd36794d7318ad68c972fd451222c1a7e8b",
+    "physio/event_audit.py": "74bb8a7315271f27de4aba15677963f50d4c6b9ce04246adfd7fdd697e7b02c9"
+  }
+}

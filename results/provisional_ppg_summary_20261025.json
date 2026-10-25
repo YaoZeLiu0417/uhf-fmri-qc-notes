@@ -1,0 +1,67 @@
+{
+  "scope": "AI-assisted exploratory workflow using fixed-rule automated pseudo-labels. No independent reference accuracy or validated physiological rate is established.",
+  "expected_cardiac_runs": 36,
+  "present_cardiac_runs": 32,
+  "missing_cardiac_runs": 4,
+  "participants_with_exports": 6,
+  "visits_with_exports": 8,
+  "source_present_scan_seconds": 19132.0,
+  "missing_scan_seconds": 2456.0,
+  "central_candidates": 22492,
+  "parameter_stable_candidates": 20915,
+  "exploratory_candidates": 20906,
+  "marked_ambiguity_seconds": 827.915310455201,
+  "window_count_with_exports": 646,
+  "windows_with_provisional_rate": 559,
+  "provisional_rate_window_seconds": 16566.0,
+  "provisional_rate_bpm_distribution": {
+    "n": 559,
+    "minimum": 49.94497860536081,
+    "median": 67.22353152584023,
+    "maximum": 110.34488799689474
+  },
+  "priority_windows": 24,
+  "priority_central_candidates": 734,
+  "priority_parameter_stable_candidates": 634,
+  "priority_exploratory_candidates": 634,
+  "priority_marked_ambiguity_seconds": 50.512801246473664,
+  "parameters": {
+    "filter_low_hz": 0.5,
+    "filter_high_hz_variants": [
+      2.0,
+      3.0,
+      4.0
+    ],
+    "prominence_sd_variants": [
+      0.5,
+      0.8
+    ],
+    "filter_order": 3,
+    "minimum_peak_spacing_s": 0.4,
+    "raw_peak_search_half_width_s": 0.08,
+    "agreement_tolerance_s": 0.1,
+    "uncertainty_margin_s": 0.2,
+    "central_variant": {
+      "filter_high_hz": 3.0,
+      "prominence_sd": 0.5
+    },
+    "required_support_for_parameter_stability": 6,
+    "known_artifacts": "Existing stage-1 artifact supports are retained with the same 0.2 s preview margin; waveform states are not relaxed.",
+    "minimum_intervals_for_window_rate": 5,
+    "interpretation": "Fixed exploratory proposals; six related parameter settings are not six independent annotators. Stability is not a correctness probability."
+  },
+  "human_annotations_created": 0,
+  "ai_visual_review_status": "Completed visual screen of 24 selected overlays and diagnostic zooms; not event adjudication. Other windows receive automated proposals only.",
+  "rate_time_interpretation": "Window time with an available provisional estimate, not independently validated usable time.",
+  "support_interpretation": "Count of related parameter settings, not independent votes or correctness probability.",
+  "implementation_sha256": {
+    "physio/provisional_ppg.py": "a9ea5e4a1f8cb651da2fb3b999d89c8fc67b7b193ea80aecc7e11f901d25a641",
+    "scripts/run_provisional_ppg.py": "d7578d9f5a067acb6ba5dfa161aee09264803f4a42f26c566854a80da9dea3df",
+    "physio/beats.py": "b15d2ed11a23417783065f43c6e53fd36794d7318ad68c972fd451222c1a7e8b",
+    "physio/event_audit.py": "74bb8a7315271f27de4aba15677963f50d4c6b9ce04246adfd7fdd697e7b02c9"
+  },
+  "ai_visual_reviewed_priority_windows": 24,
+  "ai_adjudicated_events": 0,
+  "parameter_selection_context": "Exploratory choices after prior inspection of this dataset; not preregistered or an independent validation set.",
+  "pulse_rate_interpretation": "Descriptive median-interval estimates in windows meeting fixed rules; no ECG heart-rate, HRV, clinical or online-timing validation."
+}

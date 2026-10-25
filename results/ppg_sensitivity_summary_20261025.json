@@ -1,0 +1,236 @@
+{
+  "scope": "Descriptive sensitivity of six fixed related settings; no independent physiological accuracy or validated usable time.",
+  "expected_cardiac_runs": 36,
+  "present_cardiac_runs": 32,
+  "missing_cardiac_runs": 4,
+  "participants_with_exports": 6,
+  "visits_with_exports": 8,
+  "expected_scan_seconds": 21588.0,
+  "source_present_scan_seconds": 19132.0,
+  "export_covered_windows": 646,
+  "original_unflagged_windows": {
+    "windows": 560,
+    "all_six_rates_available_windows": 559,
+    "rate_range_bpm": {
+      "n": 559,
+      "minimum": 0.0,
+      "p25": 0.0,
+      "median": 0.0,
+      "p75": 0.0,
+      "p90": 0.31915644709038116,
+      "p95": 0.754197169701646,
+      "maximum": 35.795338693787855
+    },
+    "candidate_count_spread_pct": {
+      "n": 559,
+      "minimum": 0.0,
+      "p25": 0.0,
+      "median": 0.0,
+      "p75": 0.0,
+      "p90": 1.9607843137254901,
+      "p95": 4.300375469336681,
+      "maximum": 46.42857142857143
+    },
+    "illustrative_rate_range_threshold_counts": {
+      "2": 544,
+      "5": 551,
+      "10": 553
+    },
+    "rate_range_le_5_but_count_spread_gt_10_windows": 4
+  },
+  "priority_windows": {
+    "windows": 24,
+    "all_six_rates_available_windows": 24,
+    "rate_range_bpm": {
+      "n": 24,
+      "minimum": 0.0,
+      "p25": 0.4743010210451519,
+      "median": 1.0828304125475512,
+      "p75": 7.668557633163772,
+      "p90": 16.076798040887038,
+      "p95": 19.462296460367327,
+      "maximum": 35.795338693787855
+    },
+    "candidate_count_spread_pct": {
+      "n": 24,
+      "minimum": 0.0,
+      "p25": 3.3333333333333335,
+      "median": 7.142857142857143,
+      "p75": 25.75,
+      "p90": 36.776315789473685,
+      "p95": 44.85576923076921,
+      "maximum": 46.42857142857143
+    },
+    "illustrative_rate_range_threshold_counts": {
+      "2": 13,
+      "5": 16,
+      "10": 18
+    },
+    "rate_range_le_5_but_count_spread_gt_10_windows": 2
+  },
+  "other_unflagged_windows": {
+    "windows": 536,
+    "all_six_rates_available_windows": 535,
+    "rate_range_bpm": {
+      "n": 535,
+      "minimum": 0.0,
+      "p25": 0.0,
+      "median": 0.0,
+      "p75": 0.0,
+      "p90": 0.19824620638716228,
+      "p95": 0.42656257342548526,
+      "maximum": 3.2700172600733453
+    },
+    "candidate_count_spread_pct": {
+      "n": 535,
+      "minimum": 0.0,
+      "p25": 0.0,
+      "median": 0.0,
+      "p75": 0.0,
+      "p90": 0.0,
+      "p95": 3.225806451612903,
+      "maximum": 13.559322033898304
+    },
+    "illustrative_rate_range_threshold_counts": {
+      "2": 531,
+      "5": 535,
+      "10": 535
+    },
+    "rate_range_le_5_but_count_spread_gt_10_windows": 2
+  },
+  "rate_range_gt_5_concentration": {
+    "windows": 8,
+    "runs": 1,
+    "participants": 1,
+    "visits": 1,
+    "within_prior_selected_windows": 8
+  },
+  "prior_rate_windows": 559,
+  "prior_rate_window_seconds": 16566.0,
+  "prior_rate_window_retained_intervals": 18692,
+  "prior_rate_window_interval_support_seconds": 15750.251283172032,
+  "prior_rate_window_support_fraction": {
+    "n": 559,
+    "minimum": 0.3187184920160765,
+    "p25": 0.9502088693251222,
+    "median": 0.9669349708402476,
+    "p75": 0.9796543886760034,
+    "p90": 0.9865385407362744,
+    "p95": 0.99015351613481,
+    "maximum": 0.9979161203357004
+  },
+  "per_setting": {
+    "2Hz_0.5SD": {
+      "raw_peak_candidates": 22409,
+      "unflagged_window_rates_bpm": {
+        "n": 559,
+        "minimum": 49.94497860536081,
+        "p25": 57.62424900688545,
+        "median": 67.03575629811469,
+        "p75": 87.75141915657792,
+        "p90": 94.1176985855827,
+        "p95": 98.9597149341822,
+        "maximum": 110.34488799689474
+      }
+    },
+    "2Hz_0.8SD": {
+      "raw_peak_candidates": 22312,
+      "unflagged_window_rates_bpm": {
+        "n": 559,
+        "minimum": 33.87773126376376,
+        "p25": 57.559646523684506,
+        "median": 67.03575629811469,
+        "p75": 87.75141915657792,
+        "p90": 94.1176985855827,
+        "p95": 98.9597149341822,
+        "maximum": 110.34488799689474
+      }
+    },
+    "3Hz_0.5SD": {
+      "raw_peak_candidates": 22492,
+      "unflagged_window_rates_bpm": {
+        "n": 559,
+        "minimum": 49.94497860536081,
+        "p25": 57.73272707006666,
+        "median": 67.32783338114042,
+        "p75": 87.75141915657792,
+        "p90": 94.1176985855827,
+        "p95": 98.9597149341822,
+        "maximum": 110.34488799689474
+      }
+    },
+    "3Hz_0.8SD": {
+      "raw_peak_candidates": 22400,
+      "unflagged_window_rates_bpm": {
+        "n": 559,
+        "minimum": 49.94497860536081,
+        "p25": 57.68885149008601,
+        "median": 67.23284063199067,
+        "p75": 87.75141915657792,
+        "p90": 94.1176985855827,
+        "p95": 98.9597149341822,
+        "maximum": 110.34488799689474
+      }
+    },
+    "4Hz_0.5SD": {
+      "raw_peak_candidates": 22503,
+      "unflagged_window_rates_bpm": {
+        "n": 559,
+        "minimum": 49.94497860536081,
+        "p25": 57.73272707006666,
+        "median": 67.61231718415945,
+        "p75": 87.75141915657792,
+        "p90": 94.1176985855827,
+        "p95": 98.9597149341822,
+        "maximum": 110.34488799689474
+      }
+    },
+    "4Hz_0.8SD": {
+      "raw_peak_candidates": 22415,
+      "unflagged_window_rates_bpm": {
+        "n": 559,
+        "minimum": 49.94497860536081,
+        "p25": 57.69313260276064,
+        "median": 67.23284063199067,
+        "p75": 87.75141915657792,
+        "p90": 94.1176985855827,
+        "p95": 98.9597149341822,
+        "maximum": 110.34488799689474
+      }
+    }
+  },
+  "parameters": {
+    "filter_low_hz": 0.5,
+    "filter_high_hz_variants": [
+      2.0,
+      3.0,
+      4.0
+    ],
+    "prominence_sd_variants": [
+      0.5,
+      0.8
+    ],
+    "filter_order": 3,
+    "minimum_peak_spacing_s": 0.4,
+    "raw_peak_search_half_width_s": 0.08,
+    "agreement_tolerance_s": 0.1,
+    "uncertainty_margin_s": 0.2,
+    "central_variant": {
+      "filter_high_hz": 3.0,
+      "prominence_sd": 0.5
+    },
+    "required_support_for_parameter_stability": 6,
+    "known_artifacts": "Existing stage-1 artifact supports are retained with the same 0.2 s preview margin; waveform states are not relaxed.",
+    "minimum_intervals_for_window_rate": 5,
+    "interpretation": "Fixed exploratory proposals; six related parameter settings are not six independent annotators. Stability is not a correctness probability."
+  },
+  "human_annotations_created": 0,
+  "independent_accuracy_established": false,
+  "support_time_interpretation": "Disjoint retained adjacent-pair support inside prior rate-bearing windows, not independently validated usable time.",
+  "comparison_mask_interpretation": "Variant rate comparisons do not use the six-setting consensus uncertainty mask; they retain original QC and known artifacts independently.",
+  "threshold_interpretation": "2/5/10 bpm and 10% count-spread are descriptive summaries, not acceptance criteria.",
+  "implementation_sha256": {
+    "scripts/analyze_ppg_sensitivity.py": "135c4e30b06990dc30086944bf45b79584fd4f2e5b1467dbbeaedb4b74d0c1e7",
+    "physio/provisional_ppg.py": "a9ea5e4a1f8cb651da2fb3b999d89c8fc67b7b193ea80aecc7e11f901d25a641"
+  }
+}

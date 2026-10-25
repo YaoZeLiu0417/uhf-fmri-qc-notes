@@ -1,14 +1,9 @@
-"""Beat detection on pulse-oximeter (PPG) signals: a causal streaming detector, an offline reference detector,
-and a scorer that reports what a closed-loop paradigm actually needs — sensitivity, PPV, latency and jitter.
+"""Offline PPG event comparison against scanner pulse markers and an alternate detector.
 
-Design notes
-- Causal path: sample-and-hold across ADC clipping -> trailing moving average -> causal slope -> adaptive threshold
-  from a leaky running maximum -> refractory period. Only past samples are used, so the decision index is the
-  earliest sample at which a real-time system could have acted.
-- Slope-based detection is insensitive to slow additive components (e.g. the MHD-elevated T wave that ruins ECG
-  amplitude thresholds at ultra-high field); see scripts/sim_ecg_mhd.py for the negative illustration.
-- Jitter is reported as SD *and* IQR: a handful of mis-pairings at high heart rate inflates the SD while the IQR
-  stays at ~10 ms. Report the IQR and the outlier fraction together.
+The historical function name ``causal_detect`` is retained for compatibility.
+Its optional whole-record percentile cap (used by evaluate_ppg) is noncausal.
+Batch indices do not establish streaming performance or acquisition-to-output
+latency. Marker-relative offsets are not ECG R-peak error or MHD robustness.
 """
 from __future__ import annotations
 import numpy as np
@@ -22,11 +17,22 @@ def causal_hold_clipped(x: np.ndarray, clip_hi: int = 4095, clip_lo: int = 0):
     return y, int(bad.sum())
 
 def causal_detect(x, fs, refractory_s=0.35, adapt_s=3.0, k=0.45, slope_win=3, clip_pct=None, smooth_s=0.02):
-    """Streaming detector. Returns sample indices at which a beat decision is emitted."""
+    """Return offline decision indices; clip_pct requires the entire recording."""
+    x = np.asarray(x, dtype=float)
+    if x.ndim != 1 or not np.isfinite(x).all() or not np.isfinite(fs) or fs <= 0:
+        raise ValueError("Expected finite one-dimensional samples and positive fs")
+    if adapt_s <= 0 or refractory_s < 0 or smooth_s < 0:
+        raise ValueError("Invalid detector time constants")
+    if not x.size:
+        return np.array([], dtype=int)
     det, last = [], -np.inf
-    n_adapt = int(adapt_s * fs); run_max = 0.0
+    n_adapt = max(1, int(adapt_s * fs)); run_max = 0.0
     w = max(1, int(smooth_s * fs)); c = np.cumsum(np.insert(x, 0, 0.0))
-    x = np.concatenate([x[:w], (c[w:] - c[:-w]) / w]) if w > 1 else x       # trailing mean (past samples only)
+    # A trailing mean at original sample i must retain exactly the original length.
+    # The legacy concatenation produced N+1 samples and shifted the filtered path.
+    ends = np.arange(1, len(x) + 1)
+    starts = np.maximum(0, ends - w)
+    x = (c[ends] - c[starts]) / (ends - starts)
     slope_win = max(slope_win, w)
     d = np.zeros_like(x); d[slope_win:] = x[slope_win:] - x[:-slope_win]     # causal slope
     if clip_pct is not None:
@@ -45,8 +51,17 @@ def offline_detect(x, fs, band=(0.5, 8.0), min_ibi_s=0.4, prom_sd=0.8):
     return pk, y
 
 def score(ref_idx, det_idx, fs, tol_s=0.3, max_lag_s=0.6):
-    """Match each reference beat to the first unused detection in [ref - tol, ref + max_lag]."""
+    """Greedy one-to-one marker agreement in [ref - tol, ref + max_lag].
+
+The broad historical window is retained; report it alongside all metrics.
+Legacy latency/jitter keys remain aliases, not validated latency measures.
+"""
+    if not np.isfinite(fs) or fs <= 0 or tol_s < 0 or max_lag_s < 0:
+        raise ValueError("Invalid sampling rate or matching window")
     ref_t, det_t = np.asarray(ref_idx) / fs, np.asarray(det_idx) / fs
+    for events in (ref_t, det_t):
+        if events.ndim != 1 or not np.isfinite(events).all() or np.any(events < 0) or np.any(np.diff(events) <= 0):
+            raise ValueError("Events must be finite, nonnegative and strictly increasing")
     used = np.zeros(len(det_t), bool); lat = []; tp = 0
     for r in ref_t:
         j = np.searchsorted(det_t, r - tol_s)
@@ -55,17 +70,23 @@ def score(ref_idx, det_idx, fs, tol_s=0.3, max_lag_s=0.6):
                 used[j] = True; tp += 1; lat.append(det_t[j] - r); break
             j += 1
     lat = np.asarray(lat) * 1000
-    out = {"n_ref": int(len(ref_t)), "n_det": int(len(det_t)),
-           "sensitivity": tp / max(len(ref_t), 1), "ppv": tp / max(len(det_t), 1)}
+    out = {"n_ref": int(len(ref_t)), "n_det": int(len(det_t)), "n_matched": tp,
+           "n_unmatched_reference": int(len(ref_t)-tp), "n_unmatched_detection": int(len(det_t)-tp),
+           "matching_window_seconds": [-tol_s, max_lag_s],
+           "sensitivity": tp / len(ref_t) if len(ref_t) else None,
+           "ppv": tp / len(det_t) if len(det_t) else None}
     if lat.size:
         med = float(np.median(lat))
         out.update({"latency_ms_median": med, "latency_ms_p95": float(np.percentile(lat, 95)),
                     "jitter_ms_sd": float(lat.std()), "jitter_ms_iqr": float(np.subtract(*np.percentile(lat, [75, 25]))),
                     "outliers_pct_beyond_100ms": float(100 * np.mean(np.abs(lat - med) > 100))})
+        out.update({"offset_ms_median": out["latency_ms_median"],
+                    "offset_ms_p95": out["latency_ms_p95"],
+                    "timing_sd_ms": out["jitter_ms_sd"], "timing_iqr_ms": out["jitter_ms_iqr"]})
     return out
 
 def evaluate_ppg(signal, fs, scanner_trigger_idx=None):
-    """Full evaluation of the causal detector on one PPG recording. Returns (results dict, held signal, det, ref)."""
+    """Offline comparison. Returns (results dict, held signal, detections, reference)."""
     x, n_clip = causal_hold_clipped(np.asarray(signal))
     det = causal_detect(x, fs, clip_pct=99.5)
     off, _ = offline_detect(x, fs)

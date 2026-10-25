@@ -1,0 +1,19 @@
+{
+  "_note": "Fictitious paths, identifiers and clocks. Actual onsets require independent audit. Numeric volume_start means seconds since midnight; strings use HH:MM:SS.fraction. Paths resolve beside the manifest.",
+  "runs": [
+    {
+      "run_id": "sub-demo01_ses-visit1_task-rest_run-1",
+      "volume_start": "10:00:15.000",
+      "duration_seconds": 480,
+      "puls": "raw/demo01_visit1.puls",
+      "resp": "raw/demo01_visit1.resp"
+    },
+    {
+      "run_id": "sub-demo01_ses-visit1_task-rest_run-2",
+      "volume_start": 36600,
+      "duration_seconds": 480,
+      "puls": "raw/demo01_visit1.puls",
+      "resp": "raw/demo01_visit1.resp"
+    }
+  ]
+}

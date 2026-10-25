@@ -1,41 +1,45 @@
-"""Parser for Siemens PMU physiological logs (.puls / .resp / .ecg) as written by VB/VD/VE scanners.
+"""Read the observed Siemens PULS v1 and RESP v1/v3 manual PMU logs.
 
-Handles two layouts seen in practice:
-  * LOGVERSION 1 (e.g. .puls "1 2 40 280 5002 LOGVERSION_PULS 1 6002 <samples...> 5003 <footer>")
-      - one integer per sample, 400 Hz on VD/VE (50 Hz on older VB systems)
-      - value 5000 = scanner-detected trigger (inserted between samples), 6000 = end-of-trigger marker
-      - 5002 ... 6002 = embedded text messages
-      - 5003 = end of data, followed by a footer with LogStart/StopMDHTime (ms since midnight)
-  * LOGVERSION 3 with MSGTYPE 400 (e.g. .resp on VE11)
-      - five integers per sample: [bellows value 0-4095, aux1, aux2, const, const]; 400 Hz
-      - same 5000 trigger and 5002...6002 message conventions
-      - footer may be missing if logging was not stopped cleanly
-
-Usage:
-    from physio.siemens_pmu import load_pmu
-    rec = load_pmu("S01_pre.puls")
-    rec.signal, rec.fs, rec.trigger_idx, rec.duration_s, rec.footer
+RESP v3 stores five integers per sample; all four auxiliary columns are kept.
+5000/6000 are physiological peak markers, not verified MRI TTL pulses. MDH
+endpoints estimate a uniform effective sample rate, not the hardware rate or
+proof that no samples were dropped. Missing metadata does not explain its cause.
 """
 from __future__ import annotations
+
 import re
+import warnings as python_warnings
 from dataclasses import dataclass, field
+from pathlib import Path
+
 import numpy as np
+
 
 @dataclass
 class PMURecording:
     path: str
-    kind: str                      # 'puls' | 'resp' | 'ecg' | 'unknown'
+    kind: str
     logversion: int
-    signal: np.ndarray             # main channel, int
-    fs: float                      # Hz (assumed 400 unless footer says otherwise)
-    trigger_idx: np.ndarray        # sample indices where the scanner inserted a trigger (5000)
-    aux: np.ndarray | None = None  # extra columns for 5-tuple logs
+    signal: np.ndarray
+    fs: float
+    trigger_idx: np.ndarray  # legacy name: 5000 physiological marker sample indices
+    aux: np.ndarray | None = None
     messages: list = field(default_factory=list)
     footer: dict = field(default_factory=dict)
+    fs_source: str = "default"
+    warnings: list[str] = field(default_factory=list)
+    header_integers: list[int] = field(default_factory=list)
+    end_marker_present: bool = False
+    training_samples_discarded: int = 0
 
     @property
     def duration_s(self) -> float:
+        """Historical N/fs extent; use sample_span_s for first-to-last duration."""
         return len(self.signal) / self.fs
+
+    @property
+    def sample_span_s(self) -> float:
+        return max(0, len(self.signal) - 1) / self.fs
 
     @property
     def t(self) -> np.ndarray:
@@ -43,68 +47,121 @@ class PMURecording:
 
     def footer_duration_s(self) -> float | None:
         a, b = self.footer.get("LogStartMDHTime"), self.footer.get("LogStopMDHTime")
-        return (b - a) / 1000.0 if a is not None and b is not None else None
+        if a is None or b is None:
+            return None
+        if b <= a:
+            raise ValueError("Non-increasing MDH endpoints; midnight rollover or invalid dates require explicit resolution")
+        return (b - a) / 1000.0
+
 
 def _parse_footer(text: str) -> dict:
-    out = {}
-    for k, v in re.findall(r"(Log\w+Time):\s+(\d+)", text):
-        out[k] = int(v)
+    out = {key: int(value) for key, value in re.findall(r"\b(Log\w+Time):\s*(\d+)", text)}
     for line in text.splitlines():
-        m = re.match(r"\s*(\w+)\s+(Freq Per|Min Max Avg StdDiff):\s+([\d\s]+)", line)
-        if m:
-            out[f"{m.group(1)}_{m.group(2).replace(' ', '')}"] = [int(x) for x in m.group(3).split()]
+        match = re.match(r"\s*(\w+)\s+(Freq Per|Min Max Avg StdDiff):\s+([\d \t]+)", line)
+        if match:
+            out[f"{match[1]}_{match[2].replace(' ', '')}"] = [int(x) for x in match[3].split()]
     return out
 
+
+_MESSAGE = re.compile(rb"(?<!\S)5002\s+(.*?)\s+6002(?!\S)", re.DOTALL)
+
+
+def _values(trace: bytes) -> np.ndarray:
+    """Reject malformed tokens instead of accepting NumPy's partial parses."""
+    if re.search(rb"[^0-9\s+-]", trace):
+        raise ValueError("Unexpected nonnumeric PMU trace token or unclosed message")
+    # np.fromstring can silently saturate overflowing integers rather than raise.
+    for match in re.finditer(rb"(?<!\S)[+-]?\d{19,}(?!\S)", trace):
+        token = match[0]
+        digits = token.lstrip(b"+-").lstrip(b"0") or b"0"
+        limit = b"9223372036854775808" if token.startswith(b"-") else b"9223372036854775807"
+        if len(digits) > len(limit) or (len(digits) == len(limit) and digits > limit):
+            raise ValueError("PMU integer outside signed 64-bit range")
+    try:
+        with python_warnings.catch_warnings():
+            python_warnings.simplefilter("error", DeprecationWarning)
+            values = np.fromstring(trace, dtype=np.int64, sep=" ")
+    except (ValueError, DeprecationWarning) as exc:
+        raise ValueError("Malformed PMU integer token") from exc
+    if np.any(np.isin(values, [5002, 6002, 5003])):
+        raise ValueError("Unmatched PMU message/end delimiter")
+    return values
+
+
 def load_pmu(path: str, fs_default: float = 400.0) -> PMURecording:
-    text = open(path, errors="ignore").read()
-    if "5003" in text[-20000:]:
-        body, footer_txt = text.rsplit("5003", 1)
-        footer = _parse_footer(footer_txt)
+    if not np.isfinite(fs_default) or fs_default <= 0:
+        raise ValueError("fs_default must be finite and positive")
+    raw = Path(path).read_bytes()
+    header = re.match(
+        rb"^\s*(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+5002\s+LOGVERSION_(PULS|RESP)\s+(\d+)\s+6002(?!\S)",
+        raw,
+    )
+    if not header:
+        raise ValueError("Unsupported or incomplete PMU header")
+    kind, version = header[5].decode().lower(), int(header[6])
+    if (kind, version) not in (("puls", 1), ("resp", 1), ("resp", 3)):
+        raise ValueError(f"Unsupported PMU format: {kind} v{version}")
+    channels = 5 if (kind, version) == ("resp", 3) else 1
+    trace = raw[header.end():]
+    header_integers = [int(header[i]) for i in range(1, 5)]
+    del raw, header
+
+    # Siemens explicitly labels the later hardware region after training samples.
+    training = re.search(rb"(?<!\S)5002\s+uiHwRevisionPeru(?!\S)", trace)
+    discarded = 0
+    if training:
+        prefix = _values(_MESSAGE.sub(b" ", trace[:training.start()]))
+        discarded_values = np.count_nonzero((prefix != 5000) & (prefix != 6000))
+        if discarded_values % channels:
+            raise ValueError("Incomplete PMU training channel group")
+        discarded = int(discarded_values // channels)
+        trace = trace[training.start():]
+    messages = [match[1].decode("ascii") for match in _MESSAGE.finditer(trace)]
+    trace = _MESSAGE.sub(b" ", trace)
+    parts = re.split(rb"(?<!\S)5003(?!\S)", trace, maxsplit=1)
+    end_marker_present = len(parts) == 2
+    footer = _parse_footer(parts[1].decode("ascii")) if end_marker_present else {}
+    values = _values(parts[0])
+    del parts, trace
+    marker_positions = np.flatnonzero((values == 5000) | (values == 6000))
+    peak_on = values[marker_positions] == 5000
+    # Marker placement refers to the current/next physical sample after removal.
+    trigger_idx = ((marker_positions - np.arange(len(marker_positions))) // channels)[peak_on]
+    values = np.delete(values, marker_positions)
+    if not len(values) or len(values) % channels:
+        raise ValueError("Empty PMU signal or incomplete channel group")
+    grouped = values.reshape(-1, channels)
+    signal = grouped[:, 0]
+    aux = grouped[:, 1:] if channels > 1 else None
+    rec = PMURecording(
+        str(path), kind, version, signal, float(fs_default), trigger_idx,
+        aux, messages, footer, header_integers=header_integers,
+        end_marker_present=end_marker_present, training_samples_discarded=discarded,
+    )
+    if not end_marker_present:
+        rec.warnings.append("End-of-trace marker is absent; recording completeness is unknown")
+    duration = rec.footer_duration_s()
+    if duration is None:
+        rec.warnings.append("MDH start/stop endpoints are missing; fs uses the supplied default")
     else:
-        body, footer = text, {}
-    toks = body.split()
-    kind = "unknown"; logversion = 1
-    m = re.search(r"LOGVERSION_(\w+)\s+(\d+)", body[:400])
-    if m:
-        kind, logversion = m.group(1).lower(), int(m.group(2))
-    # header ends after the last 6002 within the first ~60 tokens
-    hdr_idx = [i for i, t in enumerate(toks[:80]) if t == "6002"]
-    start = hdr_idx[-1] + 1 if hdr_idx else 4
-    vals, trig, msgs = [], [], []
-    skip, cur = False, []
-    for t in toks[start:]:
-        if t == "5002": skip, cur = True, []; continue
-        if t == "6002": skip = False; msgs.append(" ".join(cur)); continue
-        if skip: cur.append(t); continue
-        if t == "5000": trig.append(len(vals)); continue
-        if t == "6000": continue
-        if t.isdigit(): vals.append(int(t))
-    arr = np.asarray(vals, dtype=np.int64)
-    aux = None
-    if logversion >= 3 and any("MSGTYPE 400" in m_ for m_ in msgs) or (logversion >= 3 and len(arr) > 10 and arr[3] == arr[8] == 67108864):
-        n = len(arr) // 5 * 5
-        a = arr[:n].reshape(-1, 5)
-        sig, aux = a[:, 0], a[:, 1:3]
-        trig = [t_ // 5 for t_ in trig]
-    else:
-        sig = arr
-    fs = fs_default
-    fd = None
-    if footer.get("LogStartMDHTime") is not None and footer.get("LogStopMDHTime") is not None:
-        fd = (footer["LogStopMDHTime"] - footer["LogStartMDHTime"]) / 1000.0
-        if fd > 0:
-            est = len(sig) / fd
-            for cand in (50.0, 100.0, 200.0, 400.0):   # snap to a plausible PMU rate
-                if abs(est - cand) / cand < 0.05: fs = cand
-    return PMURecording(path, kind, logversion, sig, fs, np.asarray(trig, dtype=np.int64), aux, msgs, footer)
+        if len(signal) < 2:
+            raise ValueError("At least two samples are required for an MDH endpoint rate")
+        rec.fs = (len(signal) - 1) / duration
+        rec.fs_source = "mdh_endpoints"
+    if discarded:
+        rec.warnings.append("Samples before the explicit uiHwRevisionPeru hardware region were excluded")
+    return rec
+
 
 def is_flatline(sig: np.ndarray, min_unique: int = 5) -> bool:
-    """A disconnected sensor logs a constant (e.g. 2048 on PULS)."""
+    """Flag near-constant recorded values without inferring the sensor fault."""
     return len(np.unique(sig)) < min_unique
+
 
 if __name__ == "__main__":
     import sys
-    for p in sys.argv[1:]:
-        r = load_pmu(p)
-        print(f"{p}: kind={r.kind} v{r.logversion} n={len(r.signal)} fs={r.fs:g} Hz dur={r.duration_s/60:.1f} min "
-              f"triggers={len(r.trigger_idx)} flat={is_flatline(r.signal)} footer_dur={r.footer_duration_s()}")
+    for source_path in sys.argv[1:]:
+        recording = load_pmu(source_path)
+        print(f"{source_path}: {recording.kind} v{recording.logversion} n={len(recording.signal)} "
+              f"fs={recording.fs:g} ({recording.fs_source}) span={recording.sample_span_s:.3f}s "
+              f"physiological_markers={len(recording.trigger_idx)} warnings={recording.warnings}")

@@ -1,0 +1,97 @@
+{
+  "scope": "Exploratory automatic scan-window screening; no_rule_flag is not validated usable time. Whole-log results were known before these rules were fixed.",
+  "run_definitions": 36,
+  "channel_run_candidates": 72,
+  "channels": {
+    "cardiac": {
+      "expected_runs": 36,
+      "present_runs": 32,
+      "missing_runs": 4,
+      "target_scan_seconds": 21588.0,
+      "source_present_scan_seconds": 19132.0,
+      "covered_seconds": 19132.0,
+      "window_count": 729,
+      "window_counts_by_state": {
+        "no_rule_flag": 560,
+        "review": 86,
+        "unusable": 0,
+        "missing": 83
+      },
+      "window_seconds_by_state": {
+        "no_rule_flag": 16572.0,
+        "review": 2560.0,
+        "unusable": 0,
+        "missing": 2456.0
+      },
+      "reason_window_counts_nonexclusive": {
+        "adc_boundary_fraction_gt_0.01": 86,
+        "channel_export_missing": 83
+      },
+      "artifact_union_support_seconds": 171.46737115412634,
+      "adc_boundary_sample_fraction": 0.00896275668894278,
+      "maximum_constant_span_s_inside_scan": 1.3548660601781441,
+      "windows_with_detector_count_difference_over_20pct": 27,
+      "event_disagreement_is_not_a_waveform_gate": true
+    },
+    "respiratory": {
+      "expected_runs": 36,
+      "present_runs": 36,
+      "missing_runs": 0,
+      "target_scan_seconds": 21588.0,
+      "source_present_scan_seconds": 21588.0,
+      "covered_seconds": 21588.0,
+      "window_count": 729,
+      "window_counts_by_state": {
+        "no_rule_flag": 357,
+        "review": 372,
+        "unusable": 0,
+        "missing": 0
+      },
+      "window_seconds_by_state": {
+        "no_rule_flag": 10516.0,
+        "review": 11072.0,
+        "unusable": 0,
+        "missing": 0
+      },
+      "reason_window_counts_nonexclusive": {
+        "adc_boundary_fraction_gt_0.01": 372,
+        "long_constant_span_gt_5s": 4
+      },
+      "artifact_union_support_seconds": 600.1905536951338,
+      "adc_boundary_sample_fraction": 0.02780248244887523,
+      "maximum_constant_span_s_inside_scan": 6.205098188787574,
+      "windows_with_detector_count_difference_over_20pct": 0,
+      "event_disagreement_is_not_a_waveform_gate": true
+    }
+  },
+  "protocol": {
+    "scope": "Exploratory automatic scan-window screening; no_rule_flag is not validated usable time. Whole-log results were known before these rules were fixed.",
+    "window_seconds": 30,
+    "adc_boundary_fraction_review_above": 0.01,
+    "constant_span_seconds_review_above": 5,
+    "insufficient_variation_unique_values_below": 5,
+    "adc_nominal_range": [
+      0,
+      4095
+    ],
+    "duration_accounting": "Sum actual window durations, including final partial windows. Artifact support is separately unioned within each run; it is not whole flagged-window time.",
+    "ppg_comparison": "Run-local offline slope detector and bandpass peak detector from the same waveform and sample-hold preprocessing; neither is independent ECG truth. Detection is performed once per padded run, not reset in every 30-second window.",
+    "event_count_disagreement_review_hint_above": 0.2,
+    "event_count_disagreement_fraction": "Absolute event-count difference divided by larger count; an exploratory review hint, not a main waveform-QC gate or an event-matching accuracy metric.",
+    "example_selection": {
+      "eligible": "Fully covered 30-second cardiac windows after the first 30 scan seconds, at least 10 events from each detector; no nonfinite/out-of-range samples and not unusable.",
+      "clear": "Lowest ADC boundary fraction among no_rule_flag windows with event-count difference <=5%; tie by manifest/run/window order. Visual review remains required.",
+      "clipping": "Highest positive ADC boundary fraction among eligible windows; absent if none.",
+      "disagreement": "Largest positive detector count difference among eligible no_rule_flag windows with ADC boundary fraction <=1%; fallback to eligible positive-difference windows if absent.",
+      "limits": "Selected examples are descriptive extreme/clear candidates, not a random validation sample. Raw example waveforms stay private."
+    },
+    "gain_timing": "Exports have no embedded gain-message timestamps. Within-run gain transitions are not inferred or certified by this screen.",
+    "task_event_alignment": "Pending task event logs and verified trigger/clock mapping."
+  },
+  "manual_review_status": "Pending. Automatically selected plots are review candidates; no window has human acceptance.",
+  "implementation_sha256": {
+    "physio/window_qc.py": "15185eb4c9dace2cfe32fddf91a015c3161e8ffd863a1f1bf9673930f9bfde7d",
+    "physio/beats.py": "b15d2ed11a23417783065f43c6e53fd36794d7318ad68c972fd451222c1a7e8b",
+    "scripts/run_window_qc.py": "37f004b899eb5c43620a07bc490385baf144d3efab2e2563023a2e0ff87eab3f"
+  }
+}

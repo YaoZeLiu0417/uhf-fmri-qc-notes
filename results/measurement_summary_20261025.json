@@ -1,0 +1,200 @@
+{
+  "scope": "MRI physiological measurement: recording QC, clock provenance, offline PPG marker comparison. No brain/BOLD association, clinical outcome or perception inference.",
+  "participants": 6,
+  "visits": 9,
+  "channel_recordings": 18,
+  "recording_quality": {
+    "puls": {
+      "recordings": 9,
+      "complete_clock_footers": 9,
+      "constant_recordings": 1,
+      "nonconstant_long_recordings": 8,
+      "nonconstant_long_recorded_minutes": 621.1347333333333,
+      "fallback_sampling_rate_recordings": 0,
+      "long_record_effective_hz": {
+        "n": 8,
+        "minimum": 399.95795477049455,
+        "median": 400.0118719795699,
+        "maximum": 400.0395433396088
+      },
+      "adc_clipping_percent": {
+        "n": 9,
+        "minimum": 0.0,
+        "median": 0.33921821453260054,
+        "maximum": 4.498941497314954
+      },
+      "longest_constant_seconds": {
+        "n": 9,
+        "minimum": 0.168,
+        "median": 1.357,
+        "maximum": 360.832
+      },
+      "records_with_gain_messages": 0,
+      "qc_verdict_counts": {
+        "OK": 4,
+        "WARN": 4,
+        "FAIL": 1
+      }
+    },
+    "resp": {
+      "recordings": 9,
+      "complete_clock_footers": 9,
+      "constant_recordings": 0,
+      "nonconstant_long_recordings": 9,
+      "nonconstant_long_recorded_minutes": 711.6784,
+      "fallback_sampling_rate_recordings": 0,
+      "long_record_effective_hz": {
+        "n": 9,
+        "minimum": 399.9580774593317,
+        "median": 400.0081842236865,
+        "maximum": 400.039443854667
+      },
+      "adc_clipping_percent": {
+        "n": 9,
+        "minimum": 0.8576677000327046,
+        "median": 2.9007319159722442,
+        "maximum": 4.9339424387152135
+      },
+      "longest_constant_seconds": {
+        "n": 9,
+        "minimum": 2.5,
+        "median": 4.232,
+        "maximum": 255.6
+      },
+      "records_with_gain_messages": 9,
+      "qc_verdict_counts": {
+        "OK": 0,
+        "WARN": 9,
+        "FAIL": 0
+      }
+    }
+  },
+  "measurement_limits": [
+    "MDH-derived effective sampling rates assume uniform within-recording sampling; fallback rates are counted separately.",
+    "Scanner physiological markers are not independent ECG ground truth or MRI TTL.",
+    "The evaluated detector uses a whole-record percentile cap and is offline.",
+    "Timing offsets are marker-relative, not system latency or R-peak errors.",
+    "Quality checks do not validate respiratory phase, RVT, perception or real-time closed-loop operation.",
+    "Repeated visits and individual pulse events are not independent participants."
+  ],
+  "offline_ppg_evaluation": {
+    "participants": 6,
+    "recordings": 8,
+    "recorded_minutes": 621.1347333333333,
+    "detector_change": "Trailing average now retains original sample count and correct sample indexing; detector parameters unchanged. Historical metrics are not overwritten.",
+    "historical_window": {
+      "matching_window_seconds": [
+        -0.3,
+        0.6
+      ],
+      "reference_markers": 41523,
+      "detections": 42804,
+      "matched_pairs": 41247,
+      "pooled_reference_recall": 0.9933530814247525,
+      "pooled_detection_ppv": 0.9636248948696383,
+      "per_record_distributions": {
+        "sensitivity": {
+          "n": 8,
+          "minimum": 0.954861843492934,
+          "median": 0.9984202823580313,
+          "maximum": 0.9997744191292578
+        },
+        "ppv": {
+          "n": 8,
+          "minimum": 0.8117267348036579,
+          "median": 0.9889321883199966,
+          "maximum": 0.995507637017071
+        },
+        "offset_ms_median": {
+          "n": 8,
+          "minimum": -145.00724580238966,
+          "median": -136.2388845333271,
+          "maximum": -120.01261489481863
+        },
+        "timing_iqr_ms": {
+          "n": 8,
+          "minimum": 7.4993362759414595,
+          "median": 11.25015806456986,
+          "maximum": 52.4948104498435
+        },
+        "timing_sd_ms": {
+          "n": 8,
+          "minimum": 9.928026538707329,
+          "median": 28.5880396584137,
+          "maximum": 130.09239251556892
+        },
+        "outliers_pct_beyond_100ms": {
+          "n": 8,
+          "minimum": 0.04637143519591931,
+          "median": 0.8268020204801634,
+          "maximum": 9.078860172299535
+        }
+      }
+    },
+    "narrower_window_sensitivity": {
+      "matching_window_seconds": [
+        -0.15,
+        0.3
+      ],
+      "reference_markers": 41523,
+      "detections": 42804,
+      "matched_pairs": 34056,
+      "pooled_reference_recall": 0.820171952893577,
+      "pooled_detection_ppv": 0.7956265769554247,
+      "per_record_distributions": {
+        "sensitivity": {
+          "n": 8,
+          "minimum": 0.5789917738873656,
+          "median": 0.8554860130882336,
+          "maximum": 0.985779948290721
+        },
+        "ppv": {
+          "n": 8,
+          "minimum": 0.492200107584723,
+          "median": 0.8389570806302062,
+          "maximum": 0.9787507130633201
+        },
+        "offset_ms_median": {
+          "n": 8,
+          "minimum": -142.5071208745976,
+          "median": -131.2377119447774,
+          "maximum": -120.01261489484527
+        },
+        "timing_iqr_ms": {
+          "n": 8,
+          "minimum": 4.999997262984834,
+          "median": 8.750486946780711,
+          "maximum": 22.497775907027062
+        },
+        "timing_sd_ms": {
+          "n": 8,
+          "minimum": 7.02333505251131,
+          "median": 11.425646221410041,
+          "maximum": 106.69355012367235
+        },
+        "outliers_pct_beyond_100ms": {
+          "n": 8,
+          "minimum": 0.0,
+          "median": 0.06530814001437064,
+          "maximum": 11.948998178506375
+        }
+      }
+    }
+  },
+  "waveform_evaluation_implementation_sha256": {
+    "physio/siemens_pmu.py": "2d7d8118b571b8898dc5adc30bd2bf742d65043f5506dd2790d28e3ab551309d",
+    "physio/beats.py": "b15d2ed11a23417783065f43c6e53fd36794d7318ad68c972fd451222c1a7e8b",
+    "physio/qc.py": "afa02b71f0e424570a4a4245581d034d0aa22b9670a52deee460ecb5d653639c",
+    "scripts/evaluate_cohort.py": "ef60a68971222ba1b7ec3afa9b4280beeb204727decdcf9b53b13aadd9c03166"
+  },
+  "report_refresh_implementation_sha256": {
+    "physio/siemens_pmu.py": "f59be1baed07a56c0140ae4dffe4b9e09683414ffd46cc89e4e340e449918f09",
+    "physio/beats.py": "b15d2ed11a23417783065f43c6e53fd36794d7318ad68c972fd451222c1a7e8b",
+    "physio/qc.py": "66b21b18474051ef4660c13a4560db31b3dc49f65a7912c54e92406557efcb02",
+    "scripts/evaluate_cohort.py": "cceacdf81661d906155b2e888b2317b1fe786ebcb6e4153ca496338bb6227bf1"
+  },
+  "report_refresh_note": "The completed waveform evaluation is retained. Subsequent hardening rejects overflowing integer tokens, validates unique participant/visit rows, distinguishes fallback sampling rates and adds respiratory constant-segment warnings (>5 s). Existing descriptive statistics support the warning refresh: three respiratory reports gain this warning; one changes OK to WARN. Detector events and all event-matching metrics are unchanged. Source/export equivalence checks are reported separately. Manifest validation also requires at least one actual source path per visit.",
+  "qc_threshold_note": "OK/WARN/FAIL are descriptive software checks, not validated physiological acceptance labels.",
+  "recorded_duration_note": "Whole-log sample spans include intervals outside MRI runs and compromised signal; not quality-accepted scan minutes.",
+  "event_matching_note": "Same detections in both pre-specified windows; greedy earliest-available one-to-one matching. No independent ECG reference."
+}

@@ -1,0 +1,103 @@
+{
+  "scope": "Selected-window exploratory PPG event audit; conditioned on prior disagreement selection, not population accuracy.",
+  "selected_windows": 24,
+  "selected_seconds": 720.0,
+  "participants": 1,
+  "visits": 1,
+  "runs": 3,
+  "raw_source_recordings": 1,
+  "event_counts": {
+    "A": 1244,
+    "B": 711,
+    "M": 798
+  },
+  "protocol": {
+    "selection": "Existing stage-1 cardiac windows with state=no_rule_flag and detector count difference >20%; no newly tuned detector parameters or timing correction.",
+    "matching_window_seconds": [
+      -0.3,
+      0.6
+    ],
+    "pairing": "Legacy earliest-available one-to-one rule, applied at run level. Reference-side and detection-side window counts are reported separately across boundaries.",
+    "references": "5000 source physiological markers, from the same pulse-oximeter recording; not independent ECG events or MRI TTL.",
+    "alignment": "SourceSliceStart/Stop and original sample indices; exported samples must exactly equal the indicated raw source slice. No estimated time shift is applied.",
+    "context_check": "Compare unchanged detectors applied once to each padded run versus once to the complete source recording. These are diagnostic context checks, not external validation.",
+    "zoom_selection": "Five-second subwindow with the largest absolute A/B event-count difference; first subwindow resolves ties. Selected for inspection, not random sampling.",
+    "visual_review": "AI-assisted descriptions may be added separately. Independent human pulse adjudication and ECG validation remain pending.",
+    "external_basis": "PPG detectors can target peaks or systolic upslopes: https://pmc.ncbi.nlm.nih.gov/articles/PMC9393905/ . This does not identify the correct events in these data."
+  },
+  "count_pattern": {
+    "A_above_M": 23,
+    "A_at_or_below_M": 1
+  },
+  "manual_event_truth_status": "Pending; no true/false heartbeat labels are assigned.",
+  "A_marker_comparison": {
+    "reference_events": 798,
+    "detected_events": 1244,
+    "matched_reference_events": 737,
+    "matched_detection_events": 739,
+    "unmatched_reference_events": 61,
+    "unmatched_detection_events": 505,
+    "per_window_median_offset_ms": {
+      "n": 24,
+      "minimum": -187.48146589183534,
+      "median": -141.236037638504,
+      "maximum": 297.4705925483363
+    },
+    "per_window_matched_offset_iqr_ms": {
+      "n": 24,
+      "minimum": 50.61999579077536,
+      "median": 89.05369629862037,
+      "maximum": 448.70564170105354
+    },
+    "window_count_difference_to_M": {
+      "n": 24,
+      "minimum": -5.0,
+      "median": 17.0,
+      "maximum": 42.0
+    },
+    "run_vs_whole_record_count_delta": {
+      "n": 24,
+      "minimum": -1.0,
+      "median": 0.0,
+      "maximum": 5.0
+    }
+  },
+  "B_marker_comparison": {
+    "reference_events": 798,
+    "detected_events": 711,
+    "matched_reference_events": 652,
+    "matched_detection_events": 652,
+    "unmatched_reference_events": 146,
+    "unmatched_detection_events": 59,
+    "per_window_median_offset_ms": {
+      "n": 24,
+      "minimum": -49.9950575711523,
+      "median": -39.996046056941736,
+      "maximum": 287.4715810341115
+    },
+    "per_window_matched_offset_iqr_ms": {
+      "n": 24,
+      "minimum": 7.499258635675687,
+      "median": 53.11974866933156,
+      "maximum": 392.4612019335285
+    },
+    "window_count_difference_to_M": {
+      "n": 24,
+      "minimum": -33.0,
+      "median": 0.0,
+      "maximum": 8.0
+    },
+    "run_vs_whole_record_count_delta": {
+      "n": 24,
+      "minimum": 0.0,
+      "median": 0.0,
+      "maximum": 6.0
+    }
+  },
+  "implementation_sha256": {
+    "physio/event_audit.py": "74bb8a7315271f27de4aba15677963f50d4c6b9ce04246adfd7fdd697e7b02c9",
+    "physio/beats.py": "b15d2ed11a23417783065f43c6e53fd36794d7318ad68c972fd451222c1a7e8b",
+    "physio/siemens_pmu.py": "f59be1baed07a56c0140ae4dffe4b9e09683414ffd46cc89e4e340e449918f09",
+    "scripts/audit_event_disagreements.py": "b7fb7a8a2684152c28f10485693425efdb706b17ee6824af0546e22ff315a10e"
+  }
+}

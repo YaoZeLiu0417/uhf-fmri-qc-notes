@@ -1,0 +1,19 @@
+{
+  "_note": "Fictitious example only. Each row is one visit; these two visits belong to one participant. Keep actual manifests and detailed output private. Paths resolve beside the manifest.",
+  "recordings": [
+    {
+      "recording_id": "demo01_visit1",
+      "participant_id": "demo01",
+      "visit_id": "visit1",
+      "puls": "raw/demo01_visit1.puls",
+      "resp": "raw/demo01_visit1.resp"
+    },
+    {
+      "recording_id": "demo01_visit2",
+      "participant_id": "demo01",
+      "visit_id": "visit2",
+      "puls": "raw/demo01_visit2.puls",
+      "resp": "raw/demo01_visit2.resp"
+    }
+  ]
+}

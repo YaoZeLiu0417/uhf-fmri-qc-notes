@@ -1,9 +1,9 @@
 {
-  "_comment": "Paths are relative to --data-root (default ../data-physio; raw logs are never committed). role: dev = primary development data (clean, complete, footers present); regression = fixed test cases with known acquisition faults that the QC must keep flagging. Participants are labelled S01/S02; sessions pre/post refer to two visits of the same participant.",
+  "_comment": "Historical four-visit regression manifest, not the expanded six-participant inventory. Paths are relative to --data-root (default ../data-physio; raw logs are never committed). dev/regression are software-development roles, not independent validation cohorts. Expected verdicts describe stored historical outputs; input equivalence to the current complete archive has not been established by hash. Participants are labelled S01/S02; pre/post are repeated visits.",
   "sessions": {
     "S02_pre":  {"role": "dev",        "puls": "S02/S02_pre.puls",  "resp": "S02/S02_pre.resp",  "expect": {"puls": "OK",   "resp": "WARN"}},
     "S02_post": {"role": "dev",        "puls": "S02/S02_post.puls", "resp": "S02/S02_post.resp", "expect": {"puls": "WARN", "resp": "WARN"}, "note": "puls has a 17.5 s dropout"},
-    "S01_pre":  {"role": "regression", "puls": "S01/S01_pre.puls",  "resp": "S01/S01_pre.resp",  "expect": {"puls": "WARN", "resp": "WARN"}, "note": "PPG clipping 4.5%; resp has no footer"},
-    "S01_post": {"role": "regression", "puls": "S01/S01_post.puls", "resp": "S01/S01_post.resp", "expect": {"puls": "FAIL", "resp": "WARN"}, "note": "puls flat 2048 (sensor not connected); resp has no footer"}
+    "S01_pre":  {"role": "regression", "puls": "S01/S01_pre.puls",  "resp": "S01/S01_pre.resp",  "expect": {"puls": "WARN", "resp": "WARN"}, "note": "Historical output: PPG clipping 4.5%, respiratory footer reported missing. Current complete respiratory archive has clock endpoints; historical input provenance unresolved."},
+    "S01_post": {"role": "regression", "puls": "S01/S01_post.puls", "resp": "S01/S01_post.resp", "expect": {"puls": "FAIL", "resp": "WARN"}, "note": "Pulse record is flat at 2048; physiological use is invalid. Historical output reported missing respiratory footer; current complete respiratory archive has clock endpoints. Sensor disconnection is not independently established."}
   }
 }
