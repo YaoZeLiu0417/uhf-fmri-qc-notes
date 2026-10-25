@@ -1,0 +1,53 @@
+{
+  "as_of": "2026-10-25",
+  "scope": "Software and source-preservation checks. These do not establish physiological event truth, valid scan duration or absolute synchronization.",
+  "software_checks": {
+    "pytest_passed": 45,
+    "pytest_skipped": 6,
+    "pytest_subtests_passed": 5,
+    "skip_reason": "Exact historical raw PMU regression inputs are unavailable; expanded real-data checks below are separate."
+  },
+  "source_provenance": {
+    "archived_source_hashes_matched": 18,
+    "accessible_original_files_directly_compared": 6,
+    "other_original_locations_unavailable": 12
+  },
+  "comparison_with_prior_local_parser": {
+    "source_files_compared": 18,
+    "all_main_channel_arrays_exactly_equal": true,
+    "all_effective_rates_within_1e_7_hz": true,
+    "maximum_rate_difference_hz": 1.758166945364792e-10,
+    "all_physiological_marker_counts_equal": true,
+    "real_data_comparison_does_not_verify_marker_positions_or_auxiliary_values": true,
+    "parser_source_bytes_sha256": "f59be1baed07a56c0140ae4dffe4b9e09683414ffd46cc89e4e340e449918f09"
+  },
+  "comparison_with_prior_local_exports": {
+    "verification": "Independent read-only comparison of every new export with the existing F-drive export; no PMU source rewrite or re-export.",
+    "run_channel_pairs": 72,
+    "exported_pairs": 68,
+    "rejected_pairs": 4,
+    "all_samples_exactly_equal": true,
+    "all_uncompressed_bytes_equal": true,
+    "all_sample_counts_match_reports": true,
+    "all_core_metadata_exactly_equal": true,
+    "all_units_equal": true,
+    "all_previously_exported_runs_pass_corrected_flatline_check": true,
+    "all_rejections_preserved": true,
+    "total_exported_samples": 16560242,
+    "minimum_strict_window_range_adc": 2882,
+    "metadata_differences_note": "TaskName uses the literal task label in the new generic exporter; channel descriptions and synchronization wording are revised. New metadata omits raw source names and source clock fields and adds relative source slice indices and padding provenance. Core sampling, relative onset, columns and units must match exactly.",
+    "fixed_exporter_sha256": "cb81ced8a24314c852d7c3542c10d5186401026f55c11d0d3022006b497c5d43"
+  },
+  "export_implementation_sha256": {
+    "physio/bids.py": "cb81ced8a24314c852d7c3542c10d5186401026f55c11d0d3022006b497c5d43",
+    "scripts/export_bids_physio.py": "5a7950fc67ea4e73691fe86e36fb53ddf58a703c2a2d4f2442cb5a9a0652b8c2"
+  },
+  "unestablished": [
+    "Independent ECG/event-reference accuracy",
+    "Independent MRI TTL synchronization",
+    "Respiratory phase or calibrated ventilation accuracy",
+    "Prospective closed-loop timing",
+    "Interoceptive perception measurement",
+    "Performance beyond the evaluated 3 T archive"
+  ]
+}

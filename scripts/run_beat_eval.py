@@ -1,4 +1,4 @@
-"""Evaluate the causal beat detector against the scanner's own pulse triggers on real PPG logs.
+"""Evaluate offline PPG decisions against the scanner's physiological pulse markers.
 
   python scripts/run_beat_eval.py                 # all sessions with a usable puls log
   python scripts/run_beat_eval.py S02_pre
@@ -13,19 +13,20 @@ from physio.plots import plot_beats
 def run(puls, out):
     rec = load_pmu(puls)
     if is_flatline(rec.signal):
-        return {"file": os.path.basename(puls), "skipped": "flat line — sensor not connected"}
+        return {"file": os.path.basename(puls), "skipped": "constant/low-variation signal; cause not established"}
     res, x, det, ref = evaluate_ppg(rec.signal, rec.fs, rec.trigger_idx)
     res = {"file": os.path.basename(puls), "mode": "real", **res}
     os.makedirs(os.path.dirname(out), exist_ok=True)
-    plot_beats(x, rec.fs, ref, det, out, f"{os.path.basename(puls)} — pulse oximeter at {rec.fs:g} Hz; reference = scanner triggers")
+    reference = "scanner pulse markers" if len(rec.trigger_idx) else "alternate offline detector"
+    plot_beats(x, rec.fs, ref, det, out, f"{os.path.basename(puls)} — pulse oximeter at {rec.fs:g} Hz; reference = {reference}")
     json.dump(res, open(out + ".json", "w"), indent=2)
     return res
 
 def one_line(k, r):
-    v = r.get("vs_scanner_triggers") or {}
     if "skipped" in r: return f"{k:14s} skipped: {r['skipped']}"
-    return (f"{k:14s} sens {v['sensitivity']:.3f}  PPV {v['ppv']:.3f}  lead {-v['latency_ms_median']:.0f} ms  "
-            f"jitter IQR {v['jitter_ms_iqr']:.1f} ms (SD {v['jitter_ms_sd']:.0f})  outliers {v['outliers_pct_beyond_100ms']:.1f}%  clipped {r['clipped_pct']}%")
+    v = r.get("vs_scanner_triggers")
+    if not v: return f"{k:14s} no scanner pulse markers; alternate-detector comparison only"
+    return f"{k:14s} scanner-marker agreement: {json.dumps(v)}; clipped {r['clipped_pct']}%"
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("session", nargs="?"); ap.add_argument("--puls"); ap.add_argument("--out"); ap.add_argument("--data-root")
