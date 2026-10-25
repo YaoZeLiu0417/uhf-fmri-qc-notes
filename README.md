@@ -71,6 +71,31 @@ See the [event audit method](docs/event-audit-2026-10.md),
 include all 24 waveform overlays, AI-assisted observations, raw pages without
 algorithm markers/counts, and an empty independent-annotation template.
 
+## Automated proposals for exploratory analysis
+
+Manual annotation can be deferred while developing the measurement workflow.
+Fixed signal-processing rules now generate a separate set of PPG pseudo-labels
+for all **32 available cardiac runs (318.87 scan minutes)**. Six related
+filter/peak settings identify parameter-stable candidates and retain ambiguity
+ranges. AI visual screening covers the 24 selected disagreement windows;
+other windows receive automated processing only. No human-reference fields
+are filled and no individual events are adjudicated.
+
+| Exploratory quantity | Result |
+|---|---:|
+| Central / parameter-stable / outside-ambiguity candidates | 22,492 / 20,915 / 20,906 |
+| Windows with a provisional pulse-rate estimate | 559 of 646 export-covered windows |
+| Full duration of those windows | 276.10 min |
+| Marked ambiguity range union | 13.80 min |
+
+These are candidate stability and descriptive rate results, not heartbeat
+accuracy or verified usable time. Window duration includes local ambiguity;
+the four missing cardiac exports remain missing. Related-parameter agreement
+is not independent validation or a correctness probability. See the
+[method and limitations](docs/provisional-ppg-2026-10.md),
+[aggregate results](results/provisional_ppg_summary_20261025.json), and
+[checks](results/provisional_ppg_validation_20261025.json).
+
 ## Independent annotation preparation
 
 Independent reference preparation is now available as a [raw-only local
@@ -79,6 +104,8 @@ supports manual points and uncertainty intervals, and exports fingerprint-bound
 annotations. Algorithm markers and counts are hidden; reviewer exposure is
 recorded explicitly. All cases are initially unannotated, and this preparation
 does not turn AI observations into human or ECG ground truth.
+It remains available for a later reference-validation stage and is not a
+prerequisite for the exploratory automated-proposal analysis above.
 
 ## Whole-recording results
 

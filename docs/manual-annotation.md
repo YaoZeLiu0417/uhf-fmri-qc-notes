@@ -6,6 +6,11 @@ windows whose event candidates disagree. The latter windows are the input to
 this annotation preparation step. The public project does not include their
 raw waveforms or participant mapping.
 
+Manual annotation is currently deferred in favor of a separate
+[automated-proposal analysis](provisional-ppg-2026-10.md). That analysis does
+not import pseudo-labels into this page or populate human-reference fields.
+The page remains available when independent reference work resumes.
+
 ## What the page does
 
 `build_ppg_annotation.py` produces a self-contained, offline page from the
