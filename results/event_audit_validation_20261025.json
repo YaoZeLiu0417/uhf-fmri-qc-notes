@@ -1,0 +1,26 @@
+{
+  "selected_case_count": 24,
+  "stage1_count_reproduction": true,
+  "source_slice_checks": 3,
+  "all_source_slices_equal": true,
+  "legacy_pair_counts_reproduced": true,
+  "no_time_shift_applied": true,
+  "maximum_manifest_clock_mapping_error_s": 0.0,
+  "selected_keys_equal_prior_stage1": true,
+  "all_24_prior_event_counts_reproduced": true,
+  "all_window_event_arrays_sorted_and_bounded": true,
+  "all_marker_count_partitions_conserved": true,
+  "source_record_hash_matches_prior_archive": true,
+  "current_code_hashes_match": true,
+  "full_window_contact_pages": 6,
+  "raw_pages_without_detector_locations_or_counts": 6,
+  "ai_initial_visual_observations": 24,
+  "independent_human_event_labels": 0,
+  "software_tests": {
+    "passed": 61,
+    "skipped_unmapped_legacy_cases": 6,
+    "subtests_passed": 5,
+    "new_event_pair_tests_passed": 3
+  },
+  "scope": "Internal source, event-count and implementation checks; not independent ECG/TTL or human physiological validation."
+}

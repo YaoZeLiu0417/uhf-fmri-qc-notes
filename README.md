@@ -48,6 +48,29 @@ See the [screening method and results](docs/window-qc-2026-10.md),
 [aggregate output](results/window_qc_summary_20261025.json), and
 [verification record](results/window_qc_validation_20261025.json).
 
+## Source-level audit of selected disagreements
+
+All 24 rule-unflagged, high-disagreement PPG windows come from **one
+participant, one visit and three runs**, spanning 12 selected minutes.
+Their candidate-event totals are **1,244 for the slope detector, 711 for
+the bandpass detector and 798 scanner physiological markers**. These are
+selected problem windows, not independent participants or an accuracy sample.
+
+![Selected event audit](results/event_audit_summary_20261025.png)
+
+Source slices, source hashes and the supplied MDH/onset mapping were checked
+before bringing scanner markers onto the exported sample axis. The audit
+locates both additional responses to small waveform fluctuations and ambiguous
+reference locations. It does not resolve true beat labels by majority vote or
+apply a timing correction. Same-sensor scanner markers remain a comparison
+reference, not independent ECG truth.
+
+See the [event audit method](docs/event-audit-2026-10.md),
+[aggregate measurements](results/event_audit_summary_20261025.json), and
+[checks](results/event_audit_validation_20261025.json). Private materials
+include all 24 waveform overlays, AI-assisted observations, raw pages without
+algorithm markers/counts, and an empty independent-annotation template.
+
 ## Whole-recording results
 
 ![Aggregate physiological measurement results](results/measurement_summary_20261025.png)
