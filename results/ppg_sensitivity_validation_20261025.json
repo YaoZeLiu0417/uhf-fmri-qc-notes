@@ -1,0 +1,24 @@
+{
+  "source_exports_rehashed": 32,
+  "central_candidate_arrays_reproduced": 32,
+  "variant_run_counts_reproduced": 192,
+  "prior_window_rates_and_interval_counts_reproduced": 646,
+  "input_manifests_unchanged": true,
+  "missing_runs_unimputed": true,
+  "human_annotations_created": 0,
+  "scope": "Consistency and implementation checks, not event accuracy.",
+  "implementation_sha256": {
+    "scripts/analyze_ppg_sensitivity.py": "135c4e30b06990dc30086944bf45b79584fd4f2e5b1467dbbeaedb4b74d0c1e7",
+    "physio/provisional_ppg.py": "a9ea5e4a1f8cb651da2fb3b999d89c8fc67b7b193ea80aecc7e11f901d25a641"
+  },
+  "independent_saved_output_readback": true,
+  "variant_event_arrays_checked": 192,
+  "setting_window_reports_recomputed": 3876,
+  "prior_consensus_support_seconds_recomputed": 15750.25128317203,
+  "sensitivity_threshold_counts_and_scan_concentration_reconciled": true,
+  "python_tests_passed": 70,
+  "python_default_legacy_path_tests_skipped": 6,
+  "python_subtests_passed": 5,
+  "figure_aggregate_only": true,
+  "figure_visually_inspected": true
+}

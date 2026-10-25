@@ -96,6 +96,16 @@ is not independent validation or a correctness probability. See the
 [aggregate results](results/provisional_ppg_summary_20261025.json), and
 [checks](results/provisional_ppg_validation_20261025.json).
 
+The follow-up [parameter sensitivity analysis](docs/ppg-sensitivity-2026-10.md)
+compares each setting separately under original QC/artifact masks. Of 559
+common windows, 551 have a rate range at most 5 bpm; the eight above 5 bpm
+are concentrated in one scan. This is a descriptive threshold, not an
+accuracy criterion. Four windows have similar rate estimates but candidate
+count spread above 10%, illustrating why rate agreement does not certify
+beat-level recognition. The prior rate-bearing windows contain **262.50
+minutes of retained adjacent-interval support**, less than their 276.10
+full minutes; neither is independently verified usable time.
+
 ## Independent annotation preparation
 
 Independent reference preparation is now available as a [raw-only local
