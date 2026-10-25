@@ -5,7 +5,7 @@
     "pytest_passed": 45,
     "pytest_skipped": 6,
     "pytest_subtests_passed": 5,
-    "skip_reason": "Exact historical raw PMU regression inputs are unavailable; expanded real-data checks below are separate."
+    "skip_reason": "Initial run could not resolve the configured legacy input paths; this is distinct from absent source data. See subsequent mapped_real_data_recheck."
   },
   "source_provenance": {
     "archived_source_hashes_matched": 18,
@@ -49,5 +49,18 @@
     "Prospective closed-loop timing",
     "Interoceptive perception measurement",
     "Performance beyond the evaluated 3 T archive"
-  ]
+  ],
+  "mapped_real_data_recheck": {
+    "tests_passed": 6,
+    "tests_failed": 0,
+    "tests_skipped": 0,
+    "qc_visit_cases": 4,
+    "pulse_detector_cases": 2,
+    "unique_source_files_used": 8,
+    "rediscovered_source_copies_hash_matching_archive": 12,
+    "method": "Only source paths were substituted in a private test runner; test assertions and source files were unchanged.",
+    "skip_cause": "Configured legacy directory structure and filenames did not resolve to the available source copies.",
+    "interpretation": "Current source copies satisfy the existing six assertions. Historical input-byte identity remains unresolved because old outputs lack input hashes. QC tests include correct identification of an unusable signal.",
+    "adds_new_participants_or_visits": false
+  }
 }

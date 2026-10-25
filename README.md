@@ -108,6 +108,15 @@ Review aggregate output before sharing. Raw-data-dependent tests skip when
 their inputs are unavailable; synthetic tests do not reproduce the
 participant results.
 
+The initial test run passed 45 tests and skipped six real-data cases because
+the configured legacy paths did not resolve. A subsequent private path mapping
+located eight required current-source files and reran those six unchanged
+assertions: **6 passed** (four visit-level QC cases and two pulse-detector
+cases). All 12 rediscovered source copies match the archived hashes. This
+confirms the assertions on the current archive; old result files lack input
+hashes, so historical input-byte identity remains unresolved. A passing QC
+test can mean correctly identifying a failed signal.
+
 The [cohort example](examples/cohort.example.json) contains one row per visit
 with `recording_id`, `participant_id`, `visit_id`, `puls` and `resp`.
 Two rows demonstrate repeated visits from one fictitious participant.
