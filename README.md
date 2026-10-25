@@ -16,7 +16,39 @@ The repository name `uhf-fmri-qc-notes` reflects an earlier research interest.
 The evaluated data are 3 T; UHF performance and interoceptive perception
 have not been validated.
 
-## Current results
+## Scan-window screening
+
+The next measurement stage screens **36 scan definitions and 68 available
+channel exports** in fixed 30-second windows, retaining the last partial
+window. There are 1,458 planned channel/windows, including 83 windows with
+no cardiac export. This is exploratory automatic screening; a window with
+no rule flag has not been independently validated as usable physiology.
+
+![Scan-window physiological screening](results/window_qc_summary_20261025.png)
+
+| Channel | Export-covered scan minutes | No rule flag (minutes) | Review-window minutes | No export (minutes) |
+|---|---:|---:|---:|---:|
+| PPG | 318.87 | 276.20 | 42.67 | 40.93 |
+| Respiration | 359.80 | 175.27 | 184.53 | 0.00 |
+
+Review-window time is not the duration of damaged samples. The union of
+flagged sample-support intervals is approximately 2.86 PPG minutes and
+10.00 respiratory minutes. The longest within-scan constant spans are
+1.35 and 6.21 seconds respectively, much shorter than the extremes in whole
+logs. These checks still do not certify precise event timing or respiratory
+phase.
+
+Two offline detectors applied to the same PPG waveform differ in event
+counts by more than 20% in 27 complete 30-second windows; 24 of these
+windows have no waveform-rule flag. This is a review clue, not independent
+accuracy evidence or a count of truly missed heartbeats. Private example
+plots and review workbooks remain local.
+
+See the [screening method and results](docs/window-qc-2026-10.md),
+[aggregate output](results/window_qc_summary_20261025.json), and
+[verification record](results/window_qc_validation_20261025.json).
+
+## Whole-recording results
 
 ![Aggregate physiological measurement results](results/measurement_summary_20261025.png)
 
