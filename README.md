@@ -2,17 +2,21 @@
 
 Small research tools for the physiological side of fMRI: parse Siemens scanner physiology logs, inspect recording quality, estimate cardiac/respiratory phase and respiratory volume per time (RVT), and evaluate pulse-oximetry beat detection offline. The project grew out of practical MRI acquisition work and an interest in reliable brain-body measurements.
 
-**Current evidence:** initial offline evaluation used three usable pulse-oximetry recordings from **two participants acquired at 3 T**, totalling approximately **209 minutes** (17,383 scanner pulse markers). These are repeated recordings, not three independent participants. Scanner pulse markers are a comparison reference, **not independent ECG ground truth**. The results do not establish clinical validity, real-time closed-loop performance, or generalisation to 5 T/9.4 T acquisitions. Raw participant logs are not included in this repository.
+**Progress update — 25 October 2026:** the companion local MRI–physiology workflow now covers **6 participants, 9 visits and 18 original physiological logs at 3 T**. It contains **36 curated BOLD runs** and **68 channel/run physiological exports**: 32 pulse-oximetry and 36 respiratory files. These are inventory and conversion results, not an expanded detector benchmark. The current MRI-only exploratory paired analysis includes two participants; the existing brain–physiology analysis has **no eligible pre/post pairs under its fixed quality gates**. See the [progress and analysis-readiness note](docs/progress-2026-10.md) and [aggregate summary](results/progress_summary_20261025.json).
+
+**Historical detector evidence:** initial offline evaluation used three usable pulse-oximetry recordings from **two participants acquired at 3 T**, totalling approximately **209 minutes** (17,383 scanner pulse markers). These are repeated recordings, not three independent participants. Scanner pulse markers are a comparison reference, **not independent ECG ground truth**. The results do not establish clinical validity, real-time closed-loop performance, or generalisation to 5 T/9.4 T acquisitions. This benchmark has not been rerun on the expanded archive. Raw participant logs are not included in this repository.
 
 The `uhf` name reflects a research interest and possible future applications, not the field strength of the evaluated data.
 
-## Implemented components
+## Components implemented in this public repository
 
 - Siemens PMU `.puls`/`.resp` parsing, including LOGVERSION 1/3, marker extraction and footer/MDH metadata.
 - Recording-level QC for flat lines, clipping, long constant segments, recording-rate plausibility and missing metadata; scanner-clock alignment helpers where the required footer timestamps exist.
 - Cardiac/respiratory phase and RVT estimation for physiological-noise modelling. The current CLI exports recording-level phase/RVT time series on a 1 Hz grid; it does **not** construct a complete RETROICOR design matrix sampled at fMRI volume/slice acquisition times. Acquisition-specific alignment, appropriate phase sampling and harmonic construction still require implementation and validation before downstream use.
 - Offline comparison of a slope-based PPG detector with scanner pulse markers and an alternative offline detector, with reference-relative detection and timing summaries.
 - Synthetic tests and fixed real-data regression cases for selected QC outputs and detector behaviour. These software checks are not independent physiological or clinical validation.
+
+The companion local workflow additionally performs scanner-clock-based, run-specific BIDS physiology export and acquisition-time audits. That code is **not bundled in this repository**. Its completed local work should not be confused with the capabilities of the public CLI above. Neither workflow has established a complete, independently validated physiological correction pipeline.
 
 ## Layout
 
@@ -40,7 +44,9 @@ The simulation is illustrative; it is not an evaluation on acquired ECG data. Im
 | Role | Recordings | Purpose and limitations |
 |---|---|---|
 | Development | S02 pre, S02 post | Two visits from one participant. PPG clipping is below 0.5%; S02 post has a recorded 17.5 s dropout. Both respiratory recordings retain QC warnings. |
-| Fixed regression cases | S01 pre, S01 post | Known problematic recordings used to check that QC flags remain detectable. S01 pre has 4.5% PPG clipping; S01 post is flat-line PPG and is excluded from beat evaluation. Their respiratory logs lack footer metadata. |
+| Fixed regression cases | S01 pre, S01 post | Historical QC cases. Stored outputs report 4.5% PPG clipping for S01 pre and flat-line PPG for S01 post, which is excluded from beat evaluation. Stored respiratory outputs reported missing footers; the current complete archive contains those clock endpoints (see provenance note below). |
+
+**Historical input provenance:** the current complete S01 pre/post respiratory files contain all four MDH/MPCU start/stop timestamps, recognisable by the legacy footer-detection logic. Their durations differ from the stored historical QC outputs. The old outputs do not identify their inputs by hash, so the discrepancy cannot be attributed to a particular cause or treated as a confirmed acquisition failure. Historical JSON results are retained unchanged; they do not describe a newly rerun analysis of the complete archive. The existing manifest and real-data tests remain historical regression cases, not validation of the expanded dataset.
 
 The manifest covers four visits, but only three PPG recordings enter the beat-evaluation summary. The development and regression labels describe software-development roles, not independent training/test cohorts or an external validation design. Repeated visits do not increase the number of independent participants.
 
@@ -88,7 +94,9 @@ Raw-data-dependent tests are skipped when the required PMU logs are unavailable.
 
 ## Possible next steps
 
-With suitable authorised data and supervision, future work could evaluate more participants, independent event references, acquisition-specific physiological modelling and prospective streaming operation. Testing at 5 T or 9.4 T would require appropriate recordings and separate validation; neither dataset availability nor comparable performance is assumed.
+The immediate work is to extend window-level waveform checks to the additional archived participants, establish which runs have enough jointly valid BOLD and physiology, and evaluate event references and acquisition-specific models on that subset. Gross coverage alone is insufficient. Preserve the existing analysis gates; do not relax them after viewing outcomes just to obtain paired results. See the [staged analysis plan](docs/progress-2026-10.md#next-analysis).
+
+Independent event references, prospective streaming operation and 5 T/9.4 T performance remain separate future validations; neither suitable dataset availability nor comparable performance is assumed.
 
 ## Methodological background
 

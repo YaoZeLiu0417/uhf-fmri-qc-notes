@@ -1,0 +1,59 @@
+{
+  "as_of": "2026-10-25",
+  "scope": "Aggregate status from a companion local workflow; its scripts and participant-level data are not bundled here.",
+  "field_strength_t": 3,
+  "archive": {
+    "participants": 6,
+    "visits": 9,
+    "original_channel_logs": 18,
+    "nonconstant_long_ppg_recordings": 8,
+    "respiratory_recordings_with_scan_coverage": 9,
+    "ppg_recorded_minutes_excluding_failed_short_record": 621.1,
+    "respiratory_recorded_minutes": 711.7,
+    "minutes_are_not_quality_accepted_minutes": true
+  },
+  "curated_bids": {
+    "bold_runs": 36,
+    "rest_runs": 19,
+    "er_runs": 8,
+    "ia_runs": 9,
+    "channel_run_candidates": 72,
+    "cardiac_ppg_exports": 32,
+    "respiratory_exports": 36,
+    "total_exports": 68,
+    "both_channel_runs": 32,
+    "respiratory_only_runs": 4,
+    "refused_cardiac_exports": 4
+  },
+  "current_verification": {
+    "archived_source_hashes_matched": 18,
+    "currently_accessible_originals_matched": 6,
+    "originals_on_unavailable_drive": 12,
+    "exports_freshly_decompressed_and_checked": 68,
+    "exports_checked_against_bold_header_duration": 68,
+    "curated_exports_with_gross_waveform_checks": 68,
+    "new_detector_benchmark_run": false,
+    "independent_ttl_validation": false,
+    "complete_physiological_correction_validated": false
+  },
+  "existing_processed_subset": {
+    "paired_mri_participants": 3,
+    "mri_visits": 6,
+    "rest_runs": 13,
+    "output_completeness_checked": true,
+    "comprehensive_manual_image_qc_complete": false,
+    "mri_only_paired_analysis_participants": 2,
+    "waveform_audited_respiratory_exports": 13,
+    "waveform_audited_ppg_exports": 11,
+    "eligible_pre_post_rate_bold_pairs": 0,
+    "scope_note": "Existing fixed-gate exploratory analysis; not a rejection of all recordings in the expanded archive."
+  },
+  "historical_detector_benchmark": {
+    "participants": 2,
+    "ppg_recordings": 3,
+    "approximately_recorded_minutes": 209,
+    "scanner_pulse_markers": 17383,
+    "reference": "Scanner pulse markers, not independent ECG truth",
+    "expanded_archive_reevaluated": false
+  }
+}
