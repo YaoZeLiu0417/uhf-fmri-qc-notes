@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark">
+<title>Interoception · 程序界面演示</title>
+<style>
+*{box-sizing:border-box}html{background:#050505;color:#f4f4f1}body{margin:0;font:16px/1.65 Arial,"Microsoft YaHei",sans-serif}
+a{color:inherit;text-underline-offset:6px}a:hover{color:#7ae6f0}a:focus-visible,video:focus-visible{outline:3px solid #7ae6f0;outline-offset:8px}
+.skip{position:absolute;left:24px;top:-90px;background:#fff;color:#000;padding:12px 20px;z-index:10}.skip:focus{top:20px}
+header,main,footer{width:min(1440px,100%);margin:auto}header{display:flex;justify-content:space-between;align-items:center;padding:32px 4vw;font-size:12px;letter-spacing:.13em}
+header a{text-decoration:none}header .label{color:#aaa}.cover{margin:0}img,video{display:block;width:100%;height:auto}.cover img{max-height:calc(100vh - 84px);object-fit:contain;background:#050505}
+section{padding:110px 4vw 0}.section-heading{display:flex;justify-content:space-between;gap:48px;align-items:end;margin-bottom:38px}
+h1,h2,h3,p{margin:0}h1{font-size:clamp(44px,6.7vw,100px);font-weight:400;letter-spacing:-.055em;line-height:1.05}h2{font-size:clamp(36px,5.1vw,72px);font-weight:400;letter-spacing:-.045em;line-height:1.08}
+.eyebrow,.number{font-size:12px;letter-spacing:.16em;color:#83e4ee}.eyebrow{margin-bottom:23px}.section-heading p{max-width:330px;color:#a9a9a9;font-size:15px;line-height:1.85}
+.screening{margin:0}.screening video,.screening picture{background:#111;width:100%}.screening figcaption{display:flex;justify-content:space-between;gap:35px;margin-top:23px;color:#a9a9a9;font-size:13px}
+.downloads{display:flex;gap:25px;flex-wrap:wrap}.exhibit{margin:75px 0 0}.exhibit figcaption{display:flex;gap:25px;align-items:baseline;margin-bottom:24px}
+h3{font-size:34px;font-weight:400;letter-spacing:-.03em}.exhibit figcaption p{color:#aaa;margin-left:auto;max-width:460px;font-size:15px}
+.exhibit a{display:block}.exhibit img{background:#000000}footer{padding:100px 4vw 45px}.provenance{border-top:1px solid #303030;padding-top:25px;display:flex;justify-content:space-between;gap:45px;color:#a7a7a7;font-size:13px}
+.provenance p{max-width:680px}.provenance a{white-space:nowrap}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:720px){header{padding:24px 6vw}header .label{display:none}section{padding:72px 6vw 0}.section-heading{display:block;margin-bottom:30px}.section-heading p{margin-top:25px;max-width:100%}.cover img{max-height:none}.screening figcaption,.provenance{display:block}.downloads{margin-top:18px}.exhibit{margin-top:55px}.exhibit figcaption{flex-wrap:wrap;gap:12px 20px}.exhibit figcaption p{flex-basis:100%;margin-left:0;max-width:100%}footer{padding:75px 6vw 35px}.provenance a{display:inline-block;margin-top:20px}}
+</style><body><a class="skip" href="#walkthrough">跳到程序演示</a>
+<header><a href="#top" aria-label="回到页面顶部">INTEROCEPTION</a><span class="label">SOFTWARE EXHIBITION · SYNTHETIC DEMO</span><a href="provenance.synthetic.json">来源记录 ↗</a></header>
+<main id="top"><h1 class="sr-only">内感受实验工作台 · 程序演示</h1>
+<figure class="cover"><img src="hero.png" alt="内感受实验工作台总览，由本项目共享渲染器生成" width="1600" height="1000"></figure>
+<section id="walkthrough" aria-labelledby="walkthrough-heading">
+<div class="eyebrow">THE WALKTHROUGH / 20 SECONDS</div>
+<div class="section-heading"><h2 id="walkthrough-heading">From cue<br>to response.</h2><p>同一套程序，从准备、等待触发，到观察与评分。参与者的画面，和操作者的工作台，各自承担清楚的任务。</p></div>
+<figure class="screening">
+<video controls playsinline preload="metadata" poster="hero.png" aria-label="20 秒合成程序流程" aria-describedby="walkthrough-note"><source src="walkthrough.mp4" type="video/mp4"></video>
+<figcaption><span id="walkthrough-note">分阶段脚本演示。所有信号与按键均为合成，无人体记录。</span><span class="downloads"><a href="walkthrough.gif">GIF ↗</a><a href="walkthrough.mp4">MP4 ↗</a><a href="hero.png">总览 ↗</a></span></figcaption></figure></section>
+<section aria-labelledby="screens-heading"><div class="eyebrow">THE SCREENS / SAME RENDERER</div>
+<div class="section-heading"><h2 id="screens-heading">Closer.</h2><p>完整尺寸的实际程序画面。测量阶段保持中性背景，只呈现协议需要的内容。</p></div>
+<figure class="exhibit"><figcaption><span class="number">01</span><h3>准备。</h3><p>明确注意目标，再进入任务。</p></figcaption><a href="participant-instruction.png" aria-label="打开完整尺寸：准备。"><img loading="lazy" src="participant-instruction.png" alt="准备。明确注意目标，再进入任务。" width="1280" height="800"></a></figure>
+<figure class="exhibit"><figcaption><span class="number">02</span><h3>观察。</h3><p>必要的实验线索，不叠加逐搏答案参照。</p></figcaption><a href="participant-task.png" aria-label="打开完整尺寸：观察。"><img loading="lazy" src="participant-task.png" alt="观察。必要的实验线索，不叠加逐搏答案参照。" width="1280" height="800"></a></figure>
+<figure class="exhibit"><figcaption><span class="number">03</span><h3>判断。</h3><p>实际状态机驱动的量尺；此处的按键由脚本模拟。</p></figcaption><a href="participant-rating.png" aria-label="打开完整尺寸：判断。"><img loading="lazy" src="participant-rating.png" alt="判断。实际状态机驱动的量尺；此处的按键由脚本模拟。" width="1280" height="800"></a></figure>
+<figure class="exhibit"><figcaption><span class="number">04</span><h3>控制。</h3><p>操作者工作台，呈现参与者之外的任务与接口状态。</p></figcaption><a href="operator.png" aria-label="打开完整尺寸：控制。"><img loading="lazy" src="operator.png" alt="控制。操作者工作台，呈现参与者之外的任务与接口状态。" width="1280" height="800"></a></figure></section></main>
+<footer><div class="provenance"><p>合成输入 · 模拟按键 · 无硬件连接。界面演示不等于显示、按键、生理或磁共振时序验证。20 秒，名义 8 fps；GIF 经 10 ms 时间量化，保留总时长。全部画面来自本项目共享渲染器与实际呈现状态机。</p><a href="provenance.synthetic.json">查看导出来源与文件哈希 ↗</a></div></footer>
+</body></html>

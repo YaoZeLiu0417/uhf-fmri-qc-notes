@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-26",
+  "version": "0.2",
+  "scope": "Synthetic software integration, not human, physiological, anatomical or hardware validation",
+  "synthetic_tests_passed": 123,
+  "synthetic_tests_failed": 0,
+  "test_groups": {
+    "body_feedback_contracts": 21,
+    "gp_ei_ucb": 34,
+    "incremental_roi_glm": 23,
+    "nifti_roi_input": 20,
+    "psychopy_fake_window_bridge": 18,
+    "session_and_independent_test": 7
+  },
+  "neuroadaptive_demo": {
+    "independently_initialized_runs": 2,
+    "candidate_conditions": 18,
+    "development_blocks_per_run": 16,
+    "fixed_test_blocks_per_run": 18,
+    "participants": 0,
+    "actual_gp_regression_implemented": true,
+    "ei_and_gp_ucb_implemented": true,
+    "test_glm_separate_from_development": true,
+    "optimizer_updates_during_frozen_test": 0,
+    "coordinates_and_roi_signals": "Artificial software verification inputs, not measured insular geometry or responses"
+  },
+  "jsonl_replay": {
+    "events": 1211,
+    "all_responses_identical": true,
+    "is_synthetic": true
+  },
+  "psychopy_module_compiled": true,
+  "psychopy_gui_executed": false,
+  "all_six_task_presenters_implemented": false,
+  "live_scanner_driver_connected": false,
+  "live_physiology_driver_connected": false,
+  "physical_display_timing_validated": false,
+  "causal_pulse_detector_validated": false,
+  "behavioural_probe_validated": false,
+  "site_gp_parameters_calibrated": false,
+  "original_paper_hyperparameters_exactly_reproduced": false,
+  "nature_author_masks_redistributed": false,
+  "human_acquisition_ready": false,
+  "record_note": "Historical v0.2 synthetic controller check; native presentation v0.3 is separately recorded in interoception_presentation_validation_20261026.json"
+}

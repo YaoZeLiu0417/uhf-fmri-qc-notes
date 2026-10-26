@@ -1,0 +1,59 @@
+{
+  "date": "2026-10-26",
+  "version": "0.3",
+  "scope": "Software and synthetic native presentation; not human or hardware timing validation",
+  "software_tests_passed": 174,
+  "software_tests_failed": 0,
+  "test_groups": {
+    "v02_controller_and_contracts": 123,
+    "presentation_state_model": 42,
+    "rendering_and_handoff": 9
+  },
+  "native_psychopy": {
+    "probe_four": {
+      "status": "completed",
+      "psychopy_version": "2025.1.1",
+      "block_count": 4,
+      "ended_block_count": 4,
+      "frames_recorded": 2659,
+      "autoplay": true,
+      "capture_interrupted_performance": true,
+      "response_contract": "two_button_binary_v1"
+    },
+    "gradcpt_reversed_placeholder": {
+      "status": "completed",
+      "psychopy_version": "2025.1.1",
+      "block_count": 1,
+      "ended_block_count": 1,
+      "frames_recorded": 430,
+      "autoplay": true,
+      "capture_interrupted_performance": true,
+      "response_contract": "two_button_binary_v1"
+    }
+  },
+  "participants": 0,
+  "live_hardware_connected": false,
+  "participant_background": "black",
+  "texture_path": "PIL RGB images, upright orientation and black field visually checked in actual back-buffer captures",
+  "screenshots": {
+    "docs/assets/program/actual-psychopy-instruction.synthetic.png": "6c0b18d6b32e0b2e9dc1dcba69b1b096f642dd4195267810714f9af288d4b785",
+    "docs/assets/program/actual-psychopy-rating.synthetic.png": "9636b877071848ca812a05b41d0576852fe60b9a611fb75b1b6f0bb1924ec8b2"
+  },
+  "documentation_media": "docs/assets/program/provenance.synthetic.json",
+  "task_library": "six demonstration families; full human protocols not validated",
+  "presenter_cli_requires_simulate": true,
+  "real_time_scanner_driver_connected": false,
+  "physical_timing_validated": false,
+  "keyboard_response_device_validated": false,
+  "site_luminance_and_geometry_calibrated": false,
+  "human_acquisition_ready": false,
+  "response_contract": "two_button_binary_v1",
+  "participant_buttons": [
+    "1",
+    "2"
+  ],
+  "missing_response": "no_response, not inferred inability or zero",
+  "native_two_button_rating_records": 8,
+  "native_tk_launcher_startup_checked": true,
+  "keycode_checker_startup_checked": true
+}

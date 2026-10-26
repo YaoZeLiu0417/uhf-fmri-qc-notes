@@ -1,0 +1,19 @@
+{
+  "schema_version": "interoception-interface-v0.1",
+  "mode": "simulation",
+  "is_synthetic": true,
+  "clock_id": "synthetic_task_monotonic",
+  "mapping_id": "synthetic_identity_mapping",
+  "delay_seconds": {"short": 0.3, "medium": 0.5, "long": 0.7},
+  "delay_interpretation": "Toy simulation values, not calibrated human-task parameters",
+  "minimum_lead_s": 0.02,
+  "cue_s": 1.5,
+  "observe_s": 10.0,
+  "rating_s": 4.0,
+  "confidence_s": 2.0,
+  "iti_choices_s": [2.0, 4.0, 6.0],
+  "readout_id": "synthetic_synchrony_v0",
+  "objective_id": "contingency_effect_precision_proposed",
+  "selector": "balanced_fallback_only",
+  "seed": 20261026
+}
