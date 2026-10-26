@@ -1,0 +1,345 @@
+{
+  "schema_version": "interoception-taskspace-v0.2",
+  "is_synthetic": true,
+  "status": "simulation",
+  "clock_id": "synthetic_task_monotonic",
+  "independent_embedding_id": "toy_coordinates_not_empirical",
+  "normalization_id": "synthetic_unit_square",
+  "roi_definition_id": "synthetic_region_III_IV_psc_v02",
+  "calibration_id": "synthetic_parameters_only",
+  "target": "Candidate task-evoked BOLD difference between predefined Region III and IV",
+  "interpretation": "Not a validated pure interoception, cardiac-phase or directed-connectivity score",
+  "source_paper": "https://doi.org/10.1038/s41586-026-11175-2",
+  "source_mask_repository": "https://github.com/LBCN-Stanford/Nature2026/tree/6072003b285a0dc39912c340f80a56a5098a7c76",
+  "source_mask_space": "MNI152 ICBM 2009c nonlinear asymmetric, as declared by authors",
+  "optimizer": {
+    "burn_in": 5,
+    "length_scale": [
+      0.22,
+      0.22
+    ],
+    "signal_variance": 1.0,
+    "noise_variance": 0.04,
+    "ucb_kappa": 2.0,
+    "ei_xi": 0.01
+  },
+  "optimizer_parameter_status": "Toy defaults, replace with independently calibrated frozen parameters before site use",
+  "glm": {
+    "hrf_tail_s": 32.0,
+    "hrf_dt_s": 0.1,
+    "include_motion": false,
+    "min_residual_df": 4
+  },
+  "glm_timing_status": "Full 32-second tail is a conservative prototype rule, not original Lorenz timing",
+  "conditions": [
+    {
+      "condition_id": "heartbeat_attention_p1",
+      "family": "heartbeat_attention",
+      "label": "关注自身心跳",
+      "preset_id": "p1",
+      "coordinates": [
+        0.095,
+        0.175
+      ],
+      "parameter_values": {
+        "synthetic_preset": 1
+      },
+      "presentation_plugin": "attention",
+      "implementation_status": "synthetic_controller_integration_only",
+      "preset_interpretation": "Family-specific candidate settings, not comparable difficulty units"
+    },
+    {
+      "condition_id": "heartbeat_attention_p2",
+      "family": "heartbeat_attention",
+      "label": "关注自身心跳",
+      "preset_id": "p2",
+      "coordinates": [
+        0.13,
+        0.22
+      ],
+      "parameter_values": {
+        "synthetic_preset": 2
+      },
+      "presentation_plugin": "attention",
+      "implementation_status": "synthetic_controller_integration_only",
+      "preset_interpretation": "Family-specific candidate settings, not comparable difficulty units"
+    },
+    {
+      "condition_id": "heartbeat_attention_p3",
+      "family": "heartbeat_attention",
+      "label": "关注自身心跳",
+      "preset_id": "p3",
+      "coordinates": [
+        0.165,
+        0.265
+      ],
+      "parameter_values": {
+        "synthetic_preset": 3
+      },
+      "presentation_plugin": "attention",
+      "implementation_status": "synthetic_controller_integration_only",
+      "preset_interpretation": "Family-specific candidate settings, not comparable difficulty units"
+    },
+    {
+      "condition_id": "respiration_attention_p1",
+      "family": "respiration_attention",
+      "label": "关注自然呼吸",
+      "preset_id": "p1",
+      "coordinates": [
+        0.215,
+        0.305
+      ],
+      "parameter_values": {
+        "synthetic_preset": 1
+      },
+      "presentation_plugin": "attention",
+      "implementation_status": "synthetic_controller_integration_only",
+      "preset_interpretation": "Family-specific candidate settings, not comparable difficulty units"
+    },
+    {
+      "condition_id": "respiration_attention_p2",
+      "family": "respiration_attention",
+      "label": "关注自然呼吸",
+      "preset_id": "p2",
+      "coordinates": [
+        0.25,
+        0.35
+      ],
+      "parameter_values": {
+        "synthetic_preset": 2
+      },
+      "presentation_plugin": "attention",
+      "implementation_status": "synthetic_controller_integration_only",
+      "preset_interpretation": "Family-specific candidate settings, not comparable difficulty units"
+    },
+    {
+      "condition_id": "respiration_attention_p3",
+      "family": "respiration_attention",
+      "label": "关注自然呼吸",
+      "preset_id": "p3",
+      "coordinates": [
+        0.285,
+        0.395
+      ],
+      "parameter_values": {
+        "synthetic_preset": 3
+      },
+      "presentation_plugin": "attention",
+      "implementation_status": "synthetic_controller_integration_only",
+      "preset_interpretation": "Family-specific candidate settings, not comparable difficulty units"
+    },
+    {
+      "condition_id": "visual_rhythm_p1",
+      "family": "visual_rhythm",
+      "label": "外部视觉节律判断",
+      "preset_id": "p1",
+      "coordinates": [
+        0.745,
+        0.195
+      ],
+      "parameter_values": {
+        "synthetic_preset": 1
+      },
+      "presentation_plugin": "visual_rhythm",
+      "implementation_status": "synthetic_controller_integration_only",
+      "preset_interpretation": "Family-specific candidate settings, not comparable difficulty units"
+    },
+    {
+      "condition_id": "visual_rhythm_p2",
+      "family": "visual_rhythm",
+      "label": "外部视觉节律判断",
+      "preset_id": "p2",
+      "coordinates": [
+        0.78,
+        0.24
+      ],
+      "parameter_values": {
+        "synthetic_preset": 2
+      },
+      "presentation_plugin": "visual_rhythm",
+      "implementation_status": "synthetic_controller_integration_only",
+      "preset_interpretation": "Family-specific candidate settings, not comparable difficulty units"
+    },
+    {
+      "condition_id": "visual_rhythm_p3",
+      "family": "visual_rhythm",
+      "label": "外部视觉节律判断",
+      "preset_id": "p3",
+      "coordinates": [
+        0.815,
+        0.285
+      ],
+      "parameter_values": {
+        "synthetic_preset": 3
+      },
+      "presentation_plugin": "visual_rhythm",
+      "implementation_status": "synthetic_controller_integration_only",
+      "preset_interpretation": "Family-specific candidate settings, not comparable difficulty units"
+    },
+    {
+      "condition_id": "body_feedback_synchrony_p1",
+      "family": "body_feedback_synchrony",
+      "label": "身体与反馈同步感判断",
+      "preset_id": "p1",
+      "coordinates": [
+        0.355,
+        0.595
+      ],
+      "parameter_values": {
+        "synthetic_preset": 1
+      },
+      "presentation_plugin": "body_feedback",
+      "implementation_status": "synthetic_controller_integration_only",
+      "preset_interpretation": "Family-specific candidate settings, not comparable difficulty units"
+    },
+    {
+      "condition_id": "body_feedback_synchrony_p2",
+      "family": "body_feedback_synchrony",
+      "label": "身体与反馈同步感判断",
+      "preset_id": "p2",
+      "coordinates": [
+        0.39,
+        0.64
+      ],
+      "parameter_values": {
+        "synthetic_preset": 2
+      },
+      "presentation_plugin": "body_feedback",
+      "implementation_status": "synthetic_controller_integration_only",
+      "preset_interpretation": "Family-specific candidate settings, not comparable difficulty units"
+    },
+    {
+      "condition_id": "body_feedback_synchrony_p3",
+      "family": "body_feedback_synchrony",
+      "label": "身体与反馈同步感判断",
+      "preset_id": "p3",
+      "coordinates": [
+        0.425,
+        0.685
+      ],
+      "parameter_values": {
+        "synthetic_preset": 3
+      },
+      "presentation_plugin": "body_feedback",
+      "implementation_status": "synthetic_controller_integration_only",
+      "preset_interpretation": "Family-specific candidate settings, not comparable difficulty units"
+    },
+    {
+      "condition_id": "gradcpt_standard_p1",
+      "family": "gradcpt_standard",
+      "label": "GradCPT普通动作映射",
+      "preset_id": "p1",
+      "coordinates": [
+        0.725,
+        0.735
+      ],
+      "parameter_values": {
+        "synthetic_preset": 1
+      },
+      "presentation_plugin": "gradcpt",
+      "implementation_status": "synthetic_controller_integration_only",
+      "preset_interpretation": "Family-specific candidate settings, not comparable difficulty units"
+    },
+    {
+      "condition_id": "gradcpt_standard_p2",
+      "family": "gradcpt_standard",
+      "label": "GradCPT普通动作映射",
+      "preset_id": "p2",
+      "coordinates": [
+        0.76,
+        0.78
+      ],
+      "parameter_values": {
+        "synthetic_preset": 2
+      },
+      "presentation_plugin": "gradcpt",
+      "implementation_status": "synthetic_controller_integration_only",
+      "preset_interpretation": "Family-specific candidate settings, not comparable difficulty units"
+    },
+    {
+      "condition_id": "gradcpt_standard_p3",
+      "family": "gradcpt_standard",
+      "label": "GradCPT普通动作映射",
+      "preset_id": "p3",
+      "coordinates": [
+        0.795,
+        0.825
+      ],
+      "parameter_values": {
+        "synthetic_preset": 3
+      },
+      "presentation_plugin": "gradcpt",
+      "implementation_status": "synthetic_controller_integration_only",
+      "preset_interpretation": "Family-specific candidate settings, not comparable difficulty units"
+    },
+    {
+      "condition_id": "gradcpt_reversed_p1",
+      "family": "gradcpt_reversed",
+      "label": "GradCPT反转动作映射",
+      "preset_id": "p1",
+      "coordinates": [
+        0.565,
+        0.805
+      ],
+      "parameter_values": {
+        "synthetic_preset": 1
+      },
+      "presentation_plugin": "gradcpt",
+      "implementation_status": "synthetic_controller_integration_only",
+      "preset_interpretation": "Family-specific candidate settings, not comparable difficulty units"
+    },
+    {
+      "condition_id": "gradcpt_reversed_p2",
+      "family": "gradcpt_reversed",
+      "label": "GradCPT反转动作映射",
+      "preset_id": "p2",
+      "coordinates": [
+        0.6,
+        0.85
+      ],
+      "parameter_values": {
+        "synthetic_preset": 2
+      },
+      "presentation_plugin": "gradcpt",
+      "implementation_status": "synthetic_controller_integration_only",
+      "preset_interpretation": "Family-specific candidate settings, not comparable difficulty units"
+    },
+    {
+      "condition_id": "gradcpt_reversed_p3",
+      "family": "gradcpt_reversed",
+      "label": "GradCPT反转动作映射",
+      "preset_id": "p3",
+      "coordinates": [
+        0.635,
+        0.895
+      ],
+      "parameter_values": {
+        "synthetic_preset": 3
+      },
+      "presentation_plugin": "gradcpt",
+      "implementation_status": "synthetic_controller_integration_only",
+      "preset_interpretation": "Family-specific candidate settings, not comparable difficulty units"
+    }
+  ],
+  "fixed_test_plan": [
+    "heartbeat_attention_p1",
+    "heartbeat_attention_p2",
+    "heartbeat_attention_p3",
+    "respiration_attention_p1",
+    "respiration_attention_p2",
+    "respiration_attention_p3",
+    "visual_rhythm_p1",
+    "visual_rhythm_p2",
+    "visual_rhythm_p3",
+    "body_feedback_synchrony_p1",
+    "body_feedback_synchrony_p2",
+    "body_feedback_synchrony_p3",
+    "gradcpt_standard_p1",
+    "gradcpt_standard_p2",
+    "gradcpt_standard_p3",
+    "gradcpt_reversed_p1",
+    "gradcpt_reversed_p2",
+    "gradcpt_reversed_p3"
+  ],
+  "coordinates_interpretation": "Artificial geometry for software tests, not measured task relationships or an insula manifold"
+}

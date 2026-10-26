@@ -1,0 +1,13 @@
+{
+  "schema_version": "interoception-two-button-v1",
+  "mapping_status": "unverified_demo_defaults",
+  "participant_response_hand": "available_response_hand_to_confirm_on_site",
+  "participant_panels": "Only physical panel 1/2 assumed available; panel 3/4 unused",
+  "nonresponse_hand": "Finger PPG and emergency squeeze bulb; no task responses",
+  "physiology": "Respiratory belt/pad connected to Siemens recording; online stream not established",
+  "button_1": ["1", "num_1"],
+  "button_2": ["2", "num_2"],
+  "operator_abort": ["escape"],
+  "simulated_trigger": ["5"],
+  "note": "Keyboard aliases are placeholders, not verified scanner response-box codes. Trigger is separate from participant buttons."
+}

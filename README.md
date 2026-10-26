@@ -1,264 +1,122 @@
-# MRI physiological measurement tools
+# Interoception in the scanner
 
-Parse Siemens physiological logs, inspect recording quality, compare pulse
-events offline, and export samples for independently audited MRI acquisition
-windows. The expanded archive now runs through the public tools, with
-aggregate results and synthetic manifest examples.
+**Body timing. Task space. Reproducible responses.**
 
-**25 October 2026: 6 participants, 9 visits and 18 original logs acquired at
-3 T.** Eight long, nonconstant PPG recordings contain **621.135 recorded
-minutes**; nine respiratory recordings contain **711.678 recorded minutes**.
-These are whole-recording durations, including non-scan periods and
-low-quality segments. They are **not quality-accepted MRI minutes**. Repeated
-visits and pulse events do not increase the independent participant count.
+![Interoception research platform: actual shared program artwork, synthetic demonstration](docs/assets/program/hero.png)
 
-The repository name `uhf-fmri-qc-notes` reflects an earlier research interest.
-The evaluated data are 3 T; UHF performance and interoceptive perception
-have not been validated.
+[Watch the film ↗](docs/assets/program/walkthrough.mp4) · [Explore the screens](docs/program-gallery.md) · [中文研究方案](docs/interoception-protocol-2026-10.zh-CN.md) · [Run the program](experiments/interoception/README.md)
 
-## Scan-window screening
+Which insular responses depend on the timing of bodily signals, and which can
+also be explained by attention, external events or action requirements?
 
-The next measurement stage screens **36 scan definitions and 68 available
-channel exports** in fixed 30-second windows, retaining the last partial
-window. There are 1,458 planned channel/windows, including 83 windows with
-no cardiac export. This is exploratory automatic screening; a window with
-no rule flag has not been independently validated as usable physiology.
+This project connects an audited MRI physiology workflow to an experimental
+prototype for asking that question. The first supplies a checkable peripheral
+timeline. The second combines controlled tasks, predefined insular targets,
+neuroadaptive search and independent response-profile tests.
 
-![Scan-window physiological screening](results/window_qc_summary_20261025.png)
+## See the program
 
-| Channel | Export-covered scan minutes | No rule flag (minutes) | Review-window minutes | No export (minutes) |
-|---|---:|---:|---:|---:|
-| PPG | 318.87 | 276.20 | 42.67 | 40.93 |
-| Respiration | 359.80 | 175.27 | 184.53 | 0.00 |
+![20-second scripted walkthrough from the actual presentation state machine and shared UI renderer](docs/assets/program/walkthrough.gif)
 
-Review-window time is not the duration of damaged samples. The union of
-flagged sample-support intervals is approximately 2.86 PPG minutes and
-10.00 respiratory minutes. The longest within-scan constant spans are
-1.35 and 6.21 seconds respectively, much shorter than the extremes in whole
-logs. These checks still do not certify precise event timing or respiratory
-phase.
+**A 20-second software demonstration.** Inputs, triggers and responses are
+synthetic. The film uses the actual presentation state machine and the same
+artwork used by the native launcher and PsychoPy prompt screens. It is not a
+human recording or a hardware timing test. [MP4](docs/assets/program/walkthrough.mp4)
+· [Screenshots and provenance](docs/assets/program/provenance.synthetic.json).
 
-Two offline detectors applied to the same PPG waveform differ in event
-counts by more than 20% in 27 complete 30-second windows; 24 of these
-windows have no waveform-rule flag. This is a review clue, not independent
-accuracy evidence or a count of truly missed heartbeats. Private example
-plots and review workbooks remain local.
+The operator gets a task library and connection status. The participant gets
+clear instructions, the prescribed stimulus and the required response. No
+second pulse display supplies the answer to a heartbeat-attention task.
+Current and replay feedback share the same visual treatment. The participant
+uses only the available **1/2 response-box panel**; synchrony and confidence
+are fixed-duration binary choices. The other hand remains with finger PPG and
+the emergency squeeze bulb. [Device mapping and controls](experiments/interoception/README.md).
 
-See the [screening method and results](docs/window-qc-2026-10.md),
-[aggregate output](results/window_qc_summary_20261025.json), and
-[verification record](results/window_qc_validation_20261025.json).
+## From measurement to an experiment
 
-## Source-level audit of selected disagreements
+| Stage | Question | In this repository |
+|---|---|---|
+| **Measure** | What was recorded, and when? | Physiological log parsing, scan-window QC, event proposals and sensitivity checks |
+| **Present** | What does the participant attend to? | Six-family demonstration, source-blind four-condition probe, fixed response pages |
+| **Estimate** | How do predefined regions respond? | Native-grid ROI extraction, incremental GLM, separate III and IV estimates |
+| **Search** | Which condition should be sampled next? | Actual GP regression, EI or GP-UCB, versioned task space and complete decision records |
+| **Verify** | Does the response profile repeat? | Independent resets, frozen optimizer and a separate test GLM |
 
-All 24 rule-unflagged, high-disagreement PPG windows come from **one
-participant, one visit and three runs**, spanning 12 selected minutes.
-Their candidate-event totals are **1,244 for the slope detector, 711 for
-the bandpass detector and 798 scanner physiological markers**. These are
-selected problem windows, not independent participants or an accuracy sample.
+The proposed starting target is **task-evoked beta III − beta IV**. It is a
+regional contrast, not an interoceptive-accuracy score. The [2026 Nature
+study](https://www.nature.com/articles/s41586-026-11175-2) supplies candidate
+functional-region priors; [Lorenz et al., 2018](https://www.nature.com/articles/s41467-018-03657-3)
+and [2021](https://doi.org/10.1093/brain/awab109) supply the neuroadaptive-method
+baseline. [Read the method-by-method comparison](docs/romy-replication-map-2026-10.zh-CN.md).
 
-![Selected event audit](results/event_audit_summary_20261025.png)
+## Run it locally
 
-Source slices, source hashes and the supplied MDH/onset mapping were checked
-before bringing scanner markers onto the exported sample axis. The audit
-locates both additional responses to small waveform fluctuations and ambiguous
-reference locations. It does not resolve true beat labels by majority vote or
-apply a timing correction. Same-sensor scanner markers remain a comparison
-reference, not independent ECG truth.
+From the repository root, in a PsychoPy environment with Pillow:
 
-See the [event audit method](docs/event-audit-2026-10.md),
-[aggregate measurements](results/event_audit_summary_20261025.json), and
-[checks](results/event_audit_validation_20261025.json). Private materials
-include all 24 waveform overlays, AI-assisted observations, raw pages without
-algorithm markers/counts, and an empty independent-annotation template.
+```bash
+python -m experiments.interoception.launcher
+```
 
-## Automated proposals for exploratory analysis
+Or review the four-condition presentation with synthetic inputs:
 
-Manual annotation can be deferred while developing the measurement workflow.
-Fixed signal-processing rules now generate a separate set of PPG pseudo-labels
-for all **32 available cardiac runs (318.87 scan minutes)**. Six related
-filter/peak settings identify parameter-stable candidates and retain ambiguity
-ranges. AI visual screening covers the 24 selected disagreement windows;
-other windows receive automated processing only. No human-reference fields
-are filled and no individual events are adjudicated.
+```bash
+python -m experiments.interoception.run_presentation --simulate --probe-four --quick --out /private/new_presentation_demo
+```
 
-| Exploratory quantity | Result |
-|---|---:|
-| Central / parameter-stable / outside-ambiguity candidates | 22,492 / 20,915 / 20,906 |
-| Windows with a provisional pulse-rate estimate | 559 of 646 export-covered windows |
-| Full duration of those windows | 276.10 min |
-| Marked ambiguity range union | 13.80 min |
+Choose a **new output directory outside this repository**. On Windows, use
+for example `D:/InteroceptionPrivate/presentation_demo_01`. For an unattended
+UI smoke check, add `--autoplay`; every generated response remains synthetic.
 
-These are candidate stability and descriptive rate results, not heartbeat
-accuracy or verified usable time. Window duration includes local ambiguity;
-the four missing cardiac exports remain missing. Related-parameter agreement
-is not independent validation or a correctness probability. See the
-[method and limitations](docs/provisional-ppg-2026-10.md),
-[aggregate results](results/provisional_ppg_summary_20261025.json), and
-[checks](results/provisional_ppg_validation_20261025.json).
+The controller can also run without a display:
 
-The follow-up [parameter sensitivity analysis](docs/ppg-sensitivity-2026-10.md)
-compares each setting separately under original QC/artifact masks. Of 559
-common windows, 551 have a rate range at most 5 bpm; the eight above 5 bpm
-are concentrated in one scan. This is a descriptive threshold, not an
-accuracy criterion. Four windows have similar rate estimates but candidate
-count spread above 10%, illustrating why rate agreement does not certify
-beat-level recognition. The prior rate-bearing windows contain **262.50
-minutes of retained adjacent-interval support**, less than their 276.10
-full minutes; neither is independently verified usable time.
+```bash
+python -m experiments.interoception.simulate_neuroadaptive --out /private/new_controller_demo
+```
 
-## Independent annotation preparation
+[Full setup and controls](experiments/interoception/README.md) ·
+[ROI / JSONL / PsychoPy interfaces](docs/interoception-interfaces-2026-10.md)
 
-Independent reference preparation is now available as a [raw-only local
-annotation page](docs/manual-annotation.md). It presents original samples,
-supports manual points and uncertainty intervals, and exports fingerprint-bound
-annotations. Algorithm markers and counts are hidden; reviewer exposure is
-recorded explicitly. All cases are initially unannotated, and this preparation
-does not turn AI observations into human or ECG ground truth.
-It remains available for a later reference-validation stage and is not a
-prerequisite for the exploratory automated-proposal analysis above.
+## What the evidence currently supports
 
-## Whole-recording results
+**Recorded physiology:** 6 participants, 9 visits and 18 original logs acquired
+at **3 T**. Eight long, nonconstant PPG recordings contain 621.135 recorded
+minutes; nine respiratory recordings contain 711.678 recorded minutes. These
+whole-log durations include non-scan and low-quality periods. They are not
+quality-accepted MRI minutes or independent participant counts.
 
-![Aggregate physiological measurement results](results/measurement_summary_20261025.png)
+The complete previous measurement report, figures, methods and public
+aggregate outputs remain in the [measurement progress report](docs/measurement-progress-2026-10.md).
 
-| Measurement | Current result |
-|---|---|
-| Recording-level PPG QC | 4 OK, 4 WARN, 1 FAIL across 9 recordings |
-| Recording-level respiratory QC | 0 OK, 9 WARN, 0 FAIL across 9 recordings |
-| Longest constant segment | PPG: 360.8 s; respiration: 255.6 s |
-| Offline PPG comparison | 8 recordings from 6 participants; 41,523 scanner pulse markers and 42,804 detections |
-| Acquisition-window export | 68 accepted channel/run exports: 32 PPG and 36 respiratory; 4 cardiac candidates refused |
-| Independent export comparison | All 16,560,242 samples exactly match the 68 existing exports; relative timing and core metadata also match |
+**Experimental prototype:** 174 software checks pass, with native PsychoPy
+smoke runs for the four-condition probe and an abstract GradCPT-style presenter.
+Real-time scanner input, causal physiology adapters,
+independent task geometry, ROI visibility, licensed GradCPT photographs and
+physical display/response timing still require site development and pilots.
+The 18 candidate presets are a software registry, not 18 validated human tasks.
+The CLI presenter is deliberately restricted to simulation.
 
-The respiratory totals include a warning for a constant interval longer than
-five seconds. This changes one earlier OK verdict to WARN without changing
-the samples or event-comparison results. Coarse QC does not establish event
-reliability: wide-window PPV ranges from **81.17% to 99.55%** across recordings,
-and an OK label is not a performance guarantee.
+[Software verification](results/interoception_interface_validation_20261026.json)
+· [Presentation verification](results/interoception_presentation_validation_20261026.json)
+· [Actual PsychoPy screen](docs/assets/program/actual-psychopy-rating.synthetic.png)
+· [Scientific plan](docs/interoception-protocol-2026-10.zh-CN.md)
 
-Both matching windows below were specified before the expanded evaluation.
-They rescore the **same reference markers and detections** using greedy
-one-to-one matching. Recall uses reference markers as its denominator; PPV
-uses detections.
+## Design and reproducibility
 
-| Detection-minus-marker window | Matched pairs | Pooled marker recall | Pooled detection PPV |
-|---|---:|---:|---:|
-| Historical: -0.30 to +0.60 s | 41,247 | 99.3353% | 96.3625% |
-| Narrower sensitivity check: -0.15 to +0.30 s | 34,056 | 82.0172% | 79.5627% |
+The visual direction studies the spacious typography, black fields and organic
+depth of [Alto Neuroscience](https://altoneuroscience.com/). All program artwork
+and the parametric shell are original. The shell is a design motif, not a brain
+reconstruction or measured insular manifold. No Alto logo, photograph or
+illustration is redistributed. Participant measurement fields remain controlled
+and achromatic. [Design decisions](docs/program-design-2026-10.md).
 
-Scanner pulse markers are not independent ECG ground truth. The narrower
-window's -150 ms boundary lies near the per-record median offsets,
-approximately -145 to -120 ms. Its lower matching rate cannot therefore be
-read as a true missed-heartbeat rate. Offsets are marker-relative, not ECG
-R-peak errors or acquisition-to-output latency. The evaluated detector uses
-a whole-record percentile cap: this is an **offline comparison**, not a
-streaming or closed-loop validation.
+Rebuild the screenshots, GIF and optional H.264 film:
 
-Recording-level phase/RVT helpers remain exploratory. The legacy QC CLI's
-1 Hz derived-series export is not a volume/slice-sampled RETROICOR design;
-respiratory phase, calibrated volume, and a complete physiological correction
-pipeline have not been independently validated here.
+```bash
+python scripts/export_interoception_demo.py --ffmpeg /path/to/ffmpeg
+```
 
-See the [measurement summary](results/measurement_summary_20261025.json),
-[validation record](results/measurement_validation_20261025.json),
-[progress inventory](results/progress_summary_20261025.json), and
-[measurement progress note](docs/progress-2026-10.md). The figure is generated
-by [plot_measurement_summary.py](scripts/plot_measurement_summary.py).
+Human MRI, physiology, identifiers and trial-level logs stay outside the public
+repository. Published Nature masks remain in the [authors' repository](https://github.com/LBCN-Stanford/Nature2026).
 
-## Integrated workflow
-
-- **Parse:** `physio/siemens_pmu.py` separates samples, auxiliary channels,
-  embedded messages and physiological markers, preserving sample indices.
-  Effective rates use MDH endpoints when available; a fallback assumed rate
-  is not equivalent to an audited clock.
-- **Inspect:** `physio/qc.py` reports clipping, constant segments, gain messages
-  and clock provenance. PPG is a pulse-oximeter waveform, not ECG;
-  respiratory amplitude is in uncalibrated arbitrary units.
-- **Compare:** `physio/beats.py` computes offline event agreement and
-  marker-relative timing. Empty denominators remain undefined.
-- **Export:** `physio/bids.py` and `scripts/export_bids_physio.py` write
-  headerless `recording-cardiac` / `recording-respiratory` TSV.GZ and JSON
-  with `SamplingFrequency`, `StartTime` and `Columns`. Each channel retains
-  its rate and offset, with up to five seconds of existing context on either
-  side. No interpolated samples or synthetic padding are added.
-- **Summarize:** `scripts/evaluate_cohort.py` processes an explicit private
-  visit manifest into aggregate measurements. Optional detailed output stays
-  private. Duplicate sources are rejected.
-
-Export rejects missing clock endpoints, inadequate coverage and a constant
-signal within the strict acquisition interval. Samples outside that interval
-cannot rescue a flat run. Existing outputs are not overwritten, and output
-directories must be separate from raw inputs. File acceptance does not
-establish reliable physiological measurement throughout the window.
-
-## Usage
-
-Run from the repository root:
-
-~~~bash
-python -m pip install -r requirements.txt
-python -m pytest tests -q
-
-python scripts/evaluate_cohort.py --manifest COHORT.private.json --out OUTPUT/measurement_summary.json --details OUTPUT/measurement_details.private.json
-python scripts/export_bids_physio.py --manifest RUNS.private.json --out OUTPUT/bids_physio --report OUTPUT/export_report.private.json
-~~~
-
-Replace placeholders with private locations outside the repository. Actual
-manifests, raw logs, detailed reports and identity mappings are not published.
-Review aggregate output before sharing. Raw-data-dependent tests skip when
-their inputs are unavailable; synthetic tests do not reproduce the
-participant results.
-
-The initial test run passed 45 tests and skipped six real-data cases because
-the configured legacy paths did not resolve. A subsequent private path mapping
-located eight required current-source files and reran those six unchanged
-assertions: **6 passed** (four visit-level QC cases and two pulse-detector
-cases). All 12 rediscovered source copies match the archived hashes. This
-confirms the assertions on the current archive; old result files lack input
-hashes, so historical input-byte identity remains unresolved. A passing QC
-test can mean correctly identifying a failed signal.
-
-The [cohort example](examples/cohort.example.json) contains one row per visit
-with `recording_id`, `participant_id`, `visit_id`, `puls` and `resp`.
-Two rows demonstrate repeated visits from one fictitious participant.
-Relative raw paths resolve beside the manifest.
-
-The [run example](examples/runs.example.json) supplies a BIDS filename prefix
-as `run_id`, an externally audited `volume_start`, `duration_seconds`,
-and available `puls` / `resp` paths. Numeric onsets mean seconds since
-midnight; strings use explicit `HH:MM:SS.fraction` notation. Example clocks
-are fictional. The exporter does not reconstruct onset from DICOM or infer
-MRI triggers. A local acquisition audit identified a **1.485 s**
-first-slice-versus-volume-onset discrepancy, illustrating why the supplied
-onset must be checked independently.
-
-MDH endpoint alignment assumes uniform sampling. It does not independently
-verify hardware rate, dropped samples, jitter or nonlinear drift.
-Physiological markers are not MRI TTL pulses. Trial-level stimulus/response
-alignment awaits task event logs and verified clock/trigger mapping;
-E-Prime timestamps alone do not prove a shared time base.
-
-## Historical evidence and next steps
-
-The initial benchmark covered **2 participants, 3 PPG recordings and about
-209 minutes**. Its [stored summary](results/beat_eval_summary.json) is retained
-unchanged. The expanded evaluation uses corrected parsing and sample
-indexing and is a new result rather than a replacement of that artifact.
-
-Historical respiratory reports lack input hashes and describe shorter files
-with missing footers. Current complete files contain those endpoints.
-Input equivalence and the cause of the discrepancy remain unresolved; it
-cannot be attributed to a confirmed acquisition failure.
-
-Next work is to establish **segment-level valid measurement time**, add
-independent event annotation/reference measurements, and test prospective
-streaming with measured acquisition-to-output timing. Whole-record duration,
-QC labels and scanner-marker agreement alone do not establish those outcomes.
-
-The event scorer retains legacy latency/jitter field aliases, but they mean
-marker-relative offset and dispersion. Current QC output uses
-`pulse_rate_bpm_*`, `pulse_interval_outliers_pct`,
-`scanner_physiological_markers`, and `resp_start_minus_puls_start_s`;
-consumers of older QC field names need updating.
-
-Research/development software. See [LICENSE](LICENSE) for the MIT licence.
+The historical repository name is `uhf-fmri-qc-notes`. Evaluated physiology is
+3 T; ultra-high-field and layer-specific performance have not been established.

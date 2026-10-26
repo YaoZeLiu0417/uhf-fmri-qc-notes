@@ -1,0 +1,117 @@
+{
+  "schema_version": "interoception-ui-demo-v1",
+  "is_synthetic": true,
+  "participants": 0,
+  "staged_demonstration": true,
+  "scripted_keys": true,
+  "hardware_connected": false,
+  "physical_timing_validated": false,
+  "actual_human_recording": false,
+  "renderer": "experiments.interoception.ui",
+  "state_machine": "experiments.interoception.presentation.TaskPresentation",
+  "renderer_sha256": "f4204e3c2bb93ca7ee8119e715e4e951c785e8a038a32717076efb001cc735ea",
+  "presenter_sha256": "9abcaeeb7eb8893366bba9fc58541747069a9a5861d826f24b0720423948ab94",
+  "exporter_sha256": "fe1e2562da1421d809f503d264827109c2328cf8b6db525924e690eebe5dbe3e",
+  "registry_sha256": "75b5fdd069f031595d9d9d2d967d687ffbed117ccefe184cdf410081ef1e730a",
+  "pillow_version": "10.4.0",
+  "seed": 0,
+  "family": "body_feedback_synchrony",
+  "font_note": "Shared renderer uses installed system fonts; no font files redistributed.",
+  "fps": 8,
+  "source_frame_count": 160,
+  "duration_s": 20,
+  "frame_size": [
+    960,
+    600
+  ],
+  "timings": {
+    "instruction_s": 1.5,
+    "task_s": 8.0,
+    "synchrony_s": 3.0,
+    "confidence_s": 2.0,
+    "fixation_s": 2.0
+  },
+  "sampling_note": "8 fps documentation sampling may omit brief visual pulses; not a beat-level timing replay.",
+  "scripted_actions": [
+    {
+      "time_s": 1.5,
+      "action": "1",
+      "synthetic": true
+    },
+    {
+      "time_s": 3.0,
+      "action": "trigger",
+      "synthetic": true
+    },
+    {
+      "time_s": 12.0,
+      "action": "2",
+      "synthetic": true
+    },
+    {
+      "time_s": 14.5,
+      "action": "2",
+      "synthetic": true
+    }
+  ],
+  "observed_phases": [
+    "instruction",
+    "trigger_wait",
+    "task",
+    "synchrony",
+    "confidence",
+    "fixation",
+    "complete"
+  ],
+  "gif": {
+    "bytes": 134535,
+    "encoded_frames": 29,
+    "duration_ms": 20000,
+    "palette_colors": 128,
+    "timing_quantum_ms": 10,
+    "source_frame_timing": "120/130 ms quantization; cumulative duration preserved"
+  },
+  "mp4": {
+    "codec": "H.264",
+    "pixel_format": "yuv420p",
+    "fps": 8,
+    "frames": 160,
+    "duration_s": 20.0,
+    "ffmpeg_executable_sha256": "2ce797a0f88d7f067180338fb227f7b1928ea727bd9a4d7a1d022f7c52af71a3",
+    "bytes": 109710
+  },
+  "files": {
+    "hero.png": {
+      "sha256": "f3444b2ff1b53b987aca4995e3c14c8243ff9d41e57f4ae5019a67ad49229be6",
+      "bytes": 439653
+    },
+    "participant-instruction.png": {
+      "sha256": "24e4be8fbbd4eaf3327aac5b9a92ab7847e0def4fbb27eba8fe980f4e094701b",
+      "bytes": 37129
+    },
+    "participant-task.png": {
+      "sha256": "4857e00b6b93858484edaed40f215a7addf1d111094fb64f2d2ab49b2f1a984d",
+      "bytes": 8722
+    },
+    "participant-rating.png": {
+      "sha256": "6731ac9185de5b56235faa03db1d40c20769fbb61eab163b1fe1914d32e0dc88",
+      "bytes": 26590
+    },
+    "operator.png": {
+      "sha256": "35fddc35b1d23b2a87d56b32cfe970b7ccfc1426fc964d82c5d5393b5dae1938",
+      "bytes": 143435
+    },
+    "walkthrough.gif": {
+      "sha256": "d823340e4483c968bd06bb4da9a9c92a60607787fab176e0bcc5af972afb1ede",
+      "bytes": 134535
+    },
+    "index.preview.html": {
+      "sha256": "025f0b37f1f4db0bb44c7816d034e959ebe77ad3681d3c49296fdb3d82fcfddd",
+      "bytes": 6642
+    },
+    "walkthrough.mp4": {
+      "sha256": "f072246a8072142fe609b8365aee23ee13edf7fae3728aa43b16d976c99ab37c",
+      "bytes": 109710
+    }
+  }
+}
